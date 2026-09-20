@@ -299,5 +299,4 @@ This is neither a trading strategy nor a live market-data platform.
 - [Release checklist](docs/release-checklist.md): conditions before considering public release.
 
 The next scope is verified release metadata, coverage and a canonical mapping for
-the first source, not a dashboard or a trading strategy. Keep the repository private until
-its owner explicitly decides to publish it.
+the first source, not a dashboard or a trading strategy.
