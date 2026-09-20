@@ -71,4 +71,4 @@ def test_published_docs_and_cases_do_not_reintroduce_old_region():
         assert '"geography":"CN"' not in text, path
     readme = (ROOT / "README.md").read_text()
     assert "copper first, aluminum second" in readme
-    assert "Keep this repository private" in readme
+    assert "This is neither a trading strategy nor a live market-data platform." in readme
