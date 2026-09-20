@@ -17,7 +17,7 @@ All checked-in market values and contract identifiers are invented fixtures.
 The collector has made actual public API requests; no real observations have been
 promoted into the research archive. No continuous service is deployed.
 The repository is employer-neutral and makes no investment-performance claims.
-Keep this repository private. Development remains **copper first, aluminum second**:
+Development remains **copper first, aluminum second**:
 the working synthetic case is copper; an aluminum case is not yet implemented.
 
 Software engineering and infrastructure are the means of making the research
