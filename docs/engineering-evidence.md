@@ -42,9 +42,8 @@ The baseline implemented:
 
 That milestone was a synthetic first version, not a live market-data system.
 Subsequent regional documentation, guarded intake, quality scoring and advisory
-review did not remove those boundaries. The repository remains private and
-development commits use the owner's configured Git identity; no public release
-has been authorized.
+review did not remove those boundaries. Publication of the repository does not
+change those technical or research limitations.
 
 ## Current extension and its evidence
 
