@@ -1,0 +1,62 @@
+{
+  "dataset": "SYNTHETIC",
+  "audit": "incremental_ingestion_vs_full_archive_replay",
+  "passed": true,
+  "checkpoints": [
+    {
+      "as_of": "2025-08-20T01:00:00.000000Z",
+      "incremental_hash": "ef6995a2b3d2a65c08f77bc83a972c0fe80bfefc02903ae512d2ce77f13be184",
+      "replay_hash": "ef6995a2b3d2a65c08f77bc83a972c0fe80bfefc02903ae512d2ce77f13be184",
+      "matches": true
+    },
+    {
+      "as_of": "2025-09-15T01:00:00.000000Z",
+      "incremental_hash": "67f82b08b962969c6efb9b482391abda54ef3eec97598cf9dd20b335b48dd2ed",
+      "replay_hash": "67f82b08b962969c6efb9b482391abda54ef3eec97598cf9dd20b335b48dd2ed",
+      "matches": true
+    },
+    {
+      "as_of": "2025-09-15T07:00:00.000000Z",
+      "incremental_hash": "bd3d2fb4895d5568193e8c55dca2824a60eb8e970235166587c6b87e6cd29730",
+      "replay_hash": "bd3d2fb4895d5568193e8c55dca2824a60eb8e970235166587c6b87e6cd29730",
+      "matches": true
+    },
+    {
+      "as_of": "2025-09-15T08:05:00.000000Z",
+      "incremental_hash": "717758b0a35aba4648d130640b609ec7f5c60402854615a4b5ca09782aa49b0d",
+      "replay_hash": "717758b0a35aba4648d130640b609ec7f5c60402854615a4b5ca09782aa49b0d",
+      "matches": true
+    },
+    {
+      "as_of": "2025-09-18T07:00:00.000000Z",
+      "incremental_hash": "bfe4532caa970cf73f51611307418619ad2576c51e623afb75e28f340d995a99",
+      "replay_hash": "bfe4532caa970cf73f51611307418619ad2576c51e623afb75e28f340d995a99",
+      "matches": true
+    },
+    {
+      "as_of": "2025-09-18T08:05:00.000000Z",
+      "incremental_hash": "5ef4a6ebab29a5a0454164877f9fbac43f6da304cedeeb7245ea8166996551ac",
+      "replay_hash": "5ef4a6ebab29a5a0454164877f9fbac43f6da304cedeeb7245ea8166996551ac",
+      "matches": true
+    },
+    {
+      "as_of": "2025-09-20T08:05:00.000000Z",
+      "incremental_hash": "316d569a6eacd7b6818d6b8e27461b190ab1bea4417b74968888c66368e05d20",
+      "replay_hash": "316d569a6eacd7b6818d6b8e27461b190ab1bea4417b74968888c66368e05d20",
+      "matches": true
+    },
+    {
+      "as_of": "2025-09-21T08:00:00.000000Z",
+      "incremental_hash": "b6df73691f379e75ebe22a7d892d6281e55fd8a2764ea35f3c37242f8af4e170",
+      "replay_hash": "b6df73691f379e75ebe22a7d892d6281e55fd8a2764ea35f3c37242f8af4e170",
+      "matches": true
+    },
+    {
+      "as_of": "2025-09-22T07:00:00.000000Z",
+      "incremental_hash": "5478a9aee6bd51b7dd0a52c40dd6700c0bc465fe61bed22c83b5edfaf4d8ab94",
+      "replay_hash": "5478a9aee6bd51b7dd0a52c40dd6700c0bc465fe61bed22c83b5edfaf4d8ab94",
+      "matches": true
+    }
+  ],
+  "boundary": "Proves parity on these fixture envelopes, not a deployed live feed."
+}
