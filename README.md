@@ -142,6 +142,55 @@ An 83.33 score can therefore accompany a quarantined record; no score certifies 
 See [Guarded intake and advisory review](docs/data-intake.md) for the delivery
 contract, runnable review command, adapter interface and operational limits.
 
+### Pipeline pseudocode and live-source boundary
+
+This pseudocode summarizes the controls, not a ready-to-run provider integration.
+**No live source is connected and no continuous service is deployed.** An authorized
+source adapter, its credentials/permissions and supervised operation remain integration
+work; optional LLM review is a separate explicit call, not an automatically running job.
+
+```text
+# Research scope: India and Bangladesh; copper first, aluminum second.
+# AVAILABLE: local file watcher, guarded intake, advisory judge, as_of evaluator.
+# NOT CONNECTED: authorized live provider -> trusted adapter -> local delivery files.
+# A polling interval is not proof of real-time source publication.
+
+when a completed local delivery arrives:
+    preserve original bytes, first local receipt time, and policy snapshot
+    if delivery is malformed or extraction is unverified / LLM-generated:
+        quarantine delivery; never silently repair or accept it
+    otherwise, for each candidate:
+        check schema, provenance presence, source/series, metal, geography,
+              units, definitions, quality flags, freshness, revisions,
+              and relative change where a threshold and baseline exist
+        leave independent source authenticity NOT_ASSESSED
+
+        requirement score = 100 for PASS, 0 for FAIL, null for NOT_ASSESSED
+        overall score = 100 * passed requirements / all requirements
+        coverage = 100 * assessed requirements / all requirements
+        preserve scorecard, reasons, policy hash, and assessment cutoff
+
+        if ANY mandatory requirement is failed or unassessed:
+            QUARANTINE, regardless of the overall score
+        else:
+            append validated observation, or retain the original duplicate
+            # Passing implemented checks does not certify economic truth.
+
+when a researcher explicitly requests optional LLM review:
+    compare the raw source with the candidate; propose, keep, abstain, or escalate
+    require literal evidence quotes, allowed fields, and canonical proposed values
+    record REJECTED_REVIEW or REQUIRES_HUMAN_REVIEW; never auto-apply
+    # Human investigation and an auditable new delivery are separate steps.
+    # Re-score any corrected candidate; never overwrite prior observations.
+
+when evaluating a versioned hypothesis at cutoff t:
+    reconstruct only evidence with event, publication, and local receipt <= t
+    preserve supporting, weakening, missing, and conflicting evidence
+    if material evidence conflicts: return INCONCLUSIVE
+    report observation confidence, data quality, provenance, and revisions separately
+    # Cleanliness scores do not vote on or override the hypothesis conclusion.
+```
+
 ## Inspect the archive yourself
 
 ```bash
