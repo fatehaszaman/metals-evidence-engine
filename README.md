@@ -244,6 +244,11 @@ This is neither a trading strategy nor a live market-data platform.
 - [Data contract](docs/data-contract.md): units, revisions, provenance, and ingestion.
 - [Guarded intake and advisory review](docs/data-intake.md): messy deliveries,
   quarantine, LLM proposals, audit history and live-feed boundaries.
+- [Live sources: API-first integration](docs/live-sources/README.md): UN Comtrade
+  API access, source-specific mapping, permissions and activation requirements.
+- [Actual source inspection and scraping runbook](docs/live-sources/SCRAPING.md):
+  verified TradeStat controls and NBR document links, observed retrieval failures,
+  and the distinction between inspected interfaces and implemented collectors.
 - [Research method](docs/research-method.md): rules, ambiguous evidence, and conclusion gates.
 - [Case studies](examples/README.md): conflict, later revision, stale data, and definition breaks.
 - [Release checklist](docs/release-checklist.md): conditions before considering public release.
