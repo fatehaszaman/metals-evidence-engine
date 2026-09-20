@@ -13,6 +13,7 @@ from metals_evidence.demo import DEFAULT_CUTOFF, parity_audit, records, scenario
 from metals_evidence.evidence import Hypothesis, evaluate, json_report, markdown
 from metals_evidence.judge import review_files
 from metals_evidence.model import Observation, canonical
+from metals_evidence.quality import assess
 
 
 def parser() -> argparse.ArgumentParser:
@@ -45,12 +46,25 @@ def parser() -> argparse.ArgumentParser:
     judge = commands.add_parser("review", help="Audit an external LLM verdict; never apply it")
     for flag in ("db", "raw", "candidate", "verdict", "reviewer", "reviewed-at"):
         judge.add_argument(f"--{flag}", required=True)
+    score = commands.add_parser("score", help="Preview requirement scores without accepting data")
+    for flag in ("input", "policy", "as-of"):
+        score.add_argument(f"--{flag}", required=True)
+    score.add_argument("--db", help="Existing archive for baseline/revision checks")
     return root
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
     try:
+        if args.command == "score":
+            if args.db and not Path(args.db).is_file():
+                raise ValueError("score archive does not exist")
+            candidate = json.loads(Path(args.input).read_text())
+            policies = load_policy(args.policy)
+            with Archive(args.db or ":memory:") as archive:
+                _, scorecard = assess(archive, candidate, policies, args.as_of)
+            print(canonical(scorecard))
+            return 1 if scorecard["mandatory_failures"] else 0
         if args.command == "review":
             with Archive(args.db) as archive:
                 record = review_files(

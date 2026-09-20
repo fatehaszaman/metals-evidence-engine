@@ -102,6 +102,8 @@ Reports also retain provenance, revisions, and the explicit `as_of` cutoff.
   original receipt/policy snapshots, per-row quarantine, freshness and change guards.
 - **Advisory LLM judge:** provider-neutral callback, fixed verdict schema, literal
   evidence-quote checks, immutable review history; no automatic data correction.
+- **Requirement scores:** per-check 100/0/unassessed, overall score and assessment
+  coverage, immutable scorecards and non-overridable mandatory quarantine gates.
 - **Verification:** adversarial tests and a Python 3.11/3.12/3.13 GitHub Actions matrix.
 
 ## Messy data and the LLM judge
@@ -129,6 +131,13 @@ abstain, or escalate. Its output must cite exact source text and pass structural
 checks; even a valid verdict remains `REQUIRES_HUMAN_REVIEW`. The judge cannot
 promote records, replace observations, invent missing values, or resolve economic
 contradictions. Observation confidence remains separate from the model's opinion.
+
+Every intake decision now includes a `quality_scorecard` across schema, provenance,
+source/series, metal, geography, units, definitions, quality flags, freshness,
+revision integrity, change guards and source authenticity. Scores are deterministic,
+not an LLM's self-rating. Unassessed requirements earn no overall credit, and any
+failed or unassessed mandatory requirement blocks acceptance regardless of score.
+An 83.33 score can therefore accompany a quarantined record; no score certifies truth.
 
 See [Guarded intake and advisory review](docs/data-intake.md) for the delivery
 contract, runnable review command, adapter interface and operational limits.

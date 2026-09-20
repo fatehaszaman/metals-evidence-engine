@@ -11,7 +11,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from metals_evidence.archive import Archive
-from metals_evidence.model import Observation, canonical, number, timestamp, utc
+from metals_evidence.model import Observation, canonical, number, utc
+from metals_evidence.quality import assess, rejected_delivery
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS deliveries (
@@ -28,6 +29,13 @@ CREATE TABLE IF NOT EXISTS intake_decisions (
     observation_id TEXT,
     PRIMARY KEY(delivery_hash, item)
 );
+CREATE TABLE IF NOT EXISTS intake_scorecards (
+    delivery_hash TEXT NOT NULL,
+    item INTEGER NOT NULL,
+    scorecard TEXT NOT NULL,
+    PRIMARY KEY(delivery_hash, item),
+    FOREIGN KEY(delivery_hash, item) REFERENCES intake_decisions(delivery_hash, item)
+);
 CREATE TRIGGER IF NOT EXISTS delivery_no_update BEFORE UPDATE ON deliveries
 BEGIN SELECT RAISE(ABORT, 'raw deliveries are append-only'); END;
 CREATE TRIGGER IF NOT EXISTS delivery_no_delete BEFORE DELETE ON deliveries
@@ -36,6 +44,10 @@ CREATE TRIGGER IF NOT EXISTS decision_no_update BEFORE UPDATE ON intake_decision
 BEGIN SELECT RAISE(ABORT, 'intake decisions are append-only'); END;
 CREATE TRIGGER IF NOT EXISTS decision_no_delete BEFORE DELETE ON intake_decisions
 BEGIN SELECT RAISE(ABORT, 'intake decisions are append-only'); END;
+CREATE TRIGGER IF NOT EXISTS scorecard_no_update BEFORE UPDATE ON intake_scorecards
+BEGIN SELECT RAISE(ABORT, 'scorecards are append-only'); END;
+CREATE TRIGGER IF NOT EXISTS scorecard_no_delete BEFORE DELETE ON intake_scorecards
+BEGIN SELECT RAISE(ABORT, 'scorecards are append-only'); END;
 """
 
 
@@ -93,12 +105,18 @@ class Intake:
         status: str,
         reason: str,
         observation_id: str | None = None,
+        scorecard: dict | None = None,
     ):
         with self.archive.connection:
             self.archive.connection.execute(
                 "INSERT OR IGNORE INTO intake_decisions VALUES (?, ?, ?, ?, ?)",
                 (delivery_hash, item, status, reason, observation_id),
             )
+            if scorecard is not None:
+                self.archive.connection.execute(
+                    "INSERT OR IGNORE INTO intake_scorecards VALUES (?, ?, ?)",
+                    (delivery_hash, item, canonical(scorecard)),
+                )
 
     def capture(self, payload: bytes, policies: list[SeriesPolicy]) -> dict:
         delivery_hash = hashlib.sha256(payload).hexdigest()
@@ -129,7 +147,13 @@ class Intake:
             if not isinstance(rows, list) or not rows:
                 raise ValueError("observations must be a nonempty list")
         except (ValueError, TypeError, UnicodeError) as exc:
-            self._decision(delivery_hash, -1, "QUARANTINED", str(exc))
+            self._decision(
+                delivery_hash,
+                -1,
+                "QUARANTINED",
+                str(exc),
+                scorecard=rejected_delivery(str(exc)),
+            )
             return self.result(delivery_hash)
         for index, candidate in enumerate(rows):
             if connection.execute(
@@ -137,27 +161,46 @@ class Intake:
                 (delivery_hash, index),
             ).fetchone():
                 continue
+            scorecard = None
             try:
-                if not isinstance(candidate, dict):
-                    raise ValueError("observation must be an object")
-                # Producer-supplied ingestion time is never trusted.
-                observation = Observation.from_dict(candidate | {"ingested_time": received})
+                # Scores and acceptance share the exact same deterministic checks.
+                observation, scorecard = assess(
+                    self.archive, candidate, original_policies, received
+                )
+                if scorecard["mandatory_failures"]:
+                    failed = next(
+                        c
+                        for c in scorecard["requirements"]
+                        if c["mandatory"] and c["status"] != "PASS"
+                    )
+                    raise ValueError(failed["reason"])
                 existing = self._existing_revision(observation)
                 if existing:
                     comparable = replace(observation, ingested_time=existing.ingested_time)
                     if comparable != existing:
                         raise ValueError("conflicting duplicate revision; preserve and investigate")
                     self._decision(
-                        delivery_hash, index, "DUPLICATE", "identical original version", existing.id
+                        delivery_hash,
+                        index,
+                        "DUPLICATE",
+                        "identical original version",
+                        existing.id,
+                        scorecard,
                     )
                     continue
-                self._validate(observation, original_policies, received)
                 self.archive.append(observation)
                 self._decision(
-                    delivery_hash, index, "ACCEPTED", "deterministic checks passed", observation.id
+                    delivery_hash,
+                    index,
+                    "ACCEPTED",
+                    "deterministic checks passed",
+                    observation.id,
+                    scorecard,
                 )
             except (ValueError, TypeError, KeyError, AttributeError) as exc:
-                self._decision(delivery_hash, index, "QUARANTINED", str(exc))
+                if scorecard is None or scorecard["disposition"] != "QUARANTINE":
+                    scorecard = rejected_delivery(str(exc))
+                self._decision(delivery_hash, index, "QUARANTINED", str(exc), scorecard=scorecard)
         return self.result(delivery_hash)
 
     def _existing_revision(self, observation: Observation) -> Observation | None:
@@ -168,47 +211,12 @@ class Intake:
         ).fetchone()
         return Observation.from_dict(json.loads(row[0])) if row else None
 
-    def _validate(self, o: Observation, policies: list[SeriesPolicy], received: str):
-        rule = next((p for p in policies if p.source == o.source and p.series == o.series), None)
-        if rule is None:
-            raise ValueError("source/series is not allowlisted")
-        for field in ("metal", "geography", "unit", "definition"):
-            if getattr(o, field) != getattr(rule, field):
-                raise ValueError(f"{field} mismatch or definition change")
-        if o.value is None or o.quality in {"MISSING", "SUSPECT"}:
-            raise ValueError("missing or suspect value; no imputation permitted")
-        if (timestamp(received) - timestamp(o.event_time)).total_seconds() > rule.max_age_seconds:
-            raise ValueError("stale observation; preserve raw and review, do not call it live")
-        versions = self.archive.connection.execute(
-            "SELECT revision, published_time FROM observations "
-            "WHERE source=? AND series=? AND event_time=?",
-            (o.source, o.series, o.event_time),
-        ).fetchall()
-        for revision, publication in versions:
-            if (revision < o.revision and publication > o.published_time) or (
-                revision > o.revision and publication < o.published_time
-            ):
-                raise ValueError("revision and publication order disagree")
-        previous = [
-            item
-            for item in self.archive.as_of(received)
-            if item.source == o.source
-            and item.series == o.series
-            and item.event_time < o.event_time
-            and item.value is not None
-        ]
-        if rule.max_relative_change is not None and previous:
-            baseline = number(max(previous, key=lambda item: item.event_time).value)
-            if baseline == 0:
-                if number(o.value) != 0:
-                    raise ValueError("zero baseline: relative-change check requires review")
-            elif abs(number(o.value) - baseline) / abs(baseline) > number(rule.max_relative_change):
-                raise ValueError("large change requires review; may be economic, not a data error")
-
     def result(self, delivery_hash: str) -> dict:
         rows = self.archive.connection.execute(
-            "SELECT item, status, reason, observation_id FROM intake_decisions "
-            "WHERE delivery_hash=? ORDER BY item",
+            "SELECT d.item, d.status, d.reason, d.observation_id, s.scorecard "
+            "FROM intake_decisions d LEFT JOIN intake_scorecards s "
+            "ON d.delivery_hash=s.delivery_hash AND d.item=s.item "
+            "WHERE d.delivery_hash=? ORDER BY d.item",
             (delivery_hash,),
         ).fetchall()
         received = self.archive.connection.execute(
@@ -218,7 +226,8 @@ class Intake:
             "delivery_sha256": delivery_hash,
             "received_at": received,
             "decisions": [
-                dict(zip(("item", "status", "reason", "observation_id"), row, strict=True))
+                dict(zip(("item", "status", "reason", "observation_id"), row[:4], strict=True))
+                | {"quality_scorecard": json.loads(row[4]) if row[4] else None}
                 for row in rows
             ],
         }

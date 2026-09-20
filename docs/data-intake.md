@@ -160,6 +160,64 @@ source revision, forge its publication time or overwrite an existing record.
 The existing `ingest` CLI is a trusted offline import path for canonical envelopes,
 not a substitute for guarded intake of untrusted deliveries.
 
+## Requirement scores, not a "clean data" certificate
+
+Intake scores and acceptance share one deterministic requirement checker. Every
+decision includes a versioned, hashed, append-only `quality_scorecard`. It records
+the receipt-time cutoff, policy hash, requirement outcomes and explicit reasons.
+Retries retain their first scorecard; old decisions created before this feature
+show a null scorecard rather than a fabricated retrospective assessment.
+Delivery-level failures score zero before observation checks can be performed.
+
+Each requirement scores 100 for `PASS`, 0 for `FAIL`, or null for `NOT_ASSESSED`.
+The twelve requirements are schema, provenance presence, source/series allowlisting,
+metal, geography, unit, definition, quality flag, freshness, revision integrity,
+relative-change guard and source authenticity.
+
+- **Requirements score:** 100 × passed requirements / all requirements.
+  Unassessed items earn no credit but remain distinguishable from failed items.
+- **Assessed pass rate:** 100 × passed requirements / assessed requirements.
+  This is reported alongside coverage, never by itself.
+- **Assessment coverage:** 100 × assessed requirements / all requirements.
+  No assessment means a null pass rate, not a perfect score.
+- **Mandatory failures:** any mandatory requirement that is not `PASS`
+  forces `QUARANTINE`, regardless of the overall score.
+
+The change guard is mandatory when a threshold, usable value and prior baseline
+make it assessable. Without these it remains visibly unassessed, not an automatic
+pass. Source authenticity is always unassessed by this local file interface;
+provenance presence and source allowlisting cannot prove the provider is authentic.
+These two checks are not mandatory when unassessable in this prototype. Accordingly,
+`ELIGIBLE_FOR_INTAKE` means the implemented mandatory checks passed, not all
+requirements were verified. Statistical outlier detection, vendor agreement,
+economic truth and licensing compliance are not scored.
+
+For example, a first valid synthetic observation passes ten checks while anomaly
+baseline and authenticity remain unassessed: score 83.33, assessed pass rate 100,
+coverage 83.33. A later observation with a valid baseline but wrong geography can
+also score 83.33, yet must be quarantined. The requirement details matter more
+than the headline number.
+
+Preview scores for a canonical candidate without accepting it:
+
+```bash
+uv run metals-evidence score --input outputs/candidate.json \
+  --policy outputs/source-policy.json --as-of 2026-09-20T15:00:00Z
+# Add --db outputs/capture.db to check against an existing archive's known versions.
+```
+
+Use the actual intended cutoff, not the illustrative time. Without an archive there
+is no historical baseline. This is a preview against the supplied policy and declared
+cutoff, not proof the policy was historically in use. Exit 0 means eligible under
+mandatory checks, 1 means quarantine, and 2 means invalid command/input.
+The live file-intake path instead supplies its local receipt clock.
+
+LLM proposals never increase these scores automatically. A researcher can evaluate
+a proposed corrected candidate separately, but it still requires human approval,
+full provenance and guarded re-ingestion. Clean formatting or a high score does
+not resolve economic disagreement: material evidence conflict still yields
+`INCONCLUSIVE`, with observation confidence kept separate.
+
 ## What is not solved
 
 No actual India or Bangladesh data coverage, live exchange connection, statistical

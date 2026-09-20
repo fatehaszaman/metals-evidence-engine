@@ -39,6 +39,9 @@ uv run metals-evidence audit > examples/replay-audit.json
   INSUFFICIENT_EVIDENCE, not a recycled directional result.
 - **Replay:** full-archive reconstruction equals incremental ingestion at every
   receipt-time checkpoint, including late data and the revision.
+- **Requirement scores:** [Quality scorecard](quality-scorecard.md) shows why the
+  same 83.33 overall score can accompany eligible or quarantined data. Mandatory
+  failures override the score, and unassessed requirements remain visible.
 - **LLM judge:** `llm-review.jsonl` records a one-time real-model smoke test on
   explicitly invented text, not a regional market observation. The model proposed
   changing a misparsed quantity from `125` to `1250` using the literal `1,250 tonne`
