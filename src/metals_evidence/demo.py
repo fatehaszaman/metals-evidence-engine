@@ -21,10 +21,10 @@ def observation(
 ) -> Observation:
     publication = published or event
     return Observation(
-        source="synthetic-cn-metals",
+        source="synthetic-in-bd-metals",
         series=series,
         metal="COPPER",
-        geography="CN",
+        geography="IN-BD",
         event_time=event,
         published_time=publication,
         ingested_time=ingested or publication,
@@ -34,7 +34,13 @@ def observation(
         definition=kwargs.pop("definition", series + ":synthetic-v1"),
         quality=kwargs.pop("quality", "OK"),
         raw_payload=canonical(
-            {"dataset": "SYNTHETIC", "series": series, "event": event, "value": value}
+            {
+                "dataset": "SYNTHETIC",
+                "research_scope": "India and Bangladesh",
+                "series": series,
+                "event": event,
+                "value": value,
+            }
         ),
         **kwargs,
     )
@@ -51,7 +57,7 @@ def records() -> list[Observation]:
                     value,
                     published=f"2025-09-{day}T08:00:00Z",
                     ingested=f"2025-09-{day}T08:05:00Z",
-                    unit="CNY/tonne",
+                    unit="USD/tonne",
                     definition="synthetic-settlement-v1",
                     contract=Contract(
                         code=f"DEMO-CU-2025{month}",

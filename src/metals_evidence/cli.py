@@ -18,7 +18,7 @@ def parser() -> argparse.ArgumentParser:
     commands = root.add_subparsers(dest="command", required=True)
     for name in ("demo", "evaluate", "audit"):
         sub = commands.add_parser(name)
-        sub.add_argument("--hypothesis", default="hypotheses/cn_copper_tightening.json")
+        sub.add_argument("--hypothesis", default="hypotheses/in_bd_copper_availability.json")
         if name != "audit":
             sub.add_argument("--as-of", default=DEFAULT_CUTOFF if name == "demo" else None)
             sub.add_argument("--format", choices=("json", "markdown"), default="markdown")

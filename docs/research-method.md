@@ -3,6 +3,9 @@
 The core unit is an explicit hypothesis, not a scalar market-state label.
 The included rule file is a synthetic demonstration of conditional reasoning,
 with arbitrary test thresholds rather than empirically calibrated economics.
+The regional research scope is India and Bangladesh, with relevance to
+Bangladesh–India cable, conductor, power, and industrial supply chains.
+Copper is implemented first; aluminum follows only after the copper case is validated.
 
 ## Hypothesis specification
 
@@ -10,9 +13,13 @@ A hypothesis records its question, proposed mechanism, scoped metal and geograph
 version, declared effective time, alternatives, conclusion limits, and material
 versus contextual evidence requirements. The full definition is hashed into every report.
 
-The illustrative question concerns tighter readily deliverable copper conditions.
+The illustrative question concerns a hypothesis of reduced readily deliverable copper
+availability relevant to those supply chains, not a declaration of the market's state.
 It does not equate exchange stocks with all inventory, imports with consumption,
 production with demand, or calendar spreads with an identified physical shortage.
+The synthetic `IN-BD` scope does not merge actual national production, stocks or
+trade flows. Real-source research must retain country-specific provenance and
+justify each proposed transmission mechanism between the two countries.
 
 ## Evidence is not quality
 
@@ -25,9 +32,11 @@ production with demand, or calendar spreads with an identified physical shortage
   `INCONCLUSIVE` rather than asserting that physical conditions are tightening.
 
 `PRELIMINARY` and `REVISED` describe the observation, not its economic direction.
-`HIGH`, `MODERATE`, and `LOW` quality are deterministic operational summaries of
+`HIGH`, `MODERATE`, and `LOW` observation confidence are deterministic operational summaries of
 required inputs, not calibrated confidence or probabilities. Optional absent
 shipments remain visibly unavailable even if they do not prevent a scoped conclusion.
+Per-input data-quality flags remain separate from this confidence summary and from
+the overall evidence state. Neither is a tightening/loosening market-state score.
 
 ## Why imports remain contextual
 

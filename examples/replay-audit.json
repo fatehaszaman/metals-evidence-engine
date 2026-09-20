@@ -5,56 +5,56 @@
   "checkpoints": [
     {
       "as_of": "2025-08-20T01:00:00.000000Z",
-      "incremental_hash": "ef6995a2b3d2a65c08f77bc83a972c0fe80bfefc02903ae512d2ce77f13be184",
-      "replay_hash": "ef6995a2b3d2a65c08f77bc83a972c0fe80bfefc02903ae512d2ce77f13be184",
+      "incremental_hash": "7f4efb8775fb1943949b1891dc9d3306b6b9150e75be1e19c5270b8b4995f62c",
+      "replay_hash": "7f4efb8775fb1943949b1891dc9d3306b6b9150e75be1e19c5270b8b4995f62c",
       "matches": true
     },
     {
       "as_of": "2025-09-15T01:00:00.000000Z",
-      "incremental_hash": "67f82b08b962969c6efb9b482391abda54ef3eec97598cf9dd20b335b48dd2ed",
-      "replay_hash": "67f82b08b962969c6efb9b482391abda54ef3eec97598cf9dd20b335b48dd2ed",
+      "incremental_hash": "5eab9f6a66e2e032f082f775b074786bb93d6b3c36cddaa5632154225938c807",
+      "replay_hash": "5eab9f6a66e2e032f082f775b074786bb93d6b3c36cddaa5632154225938c807",
       "matches": true
     },
     {
       "as_of": "2025-09-15T07:00:00.000000Z",
-      "incremental_hash": "bd3d2fb4895d5568193e8c55dca2824a60eb8e970235166587c6b87e6cd29730",
-      "replay_hash": "bd3d2fb4895d5568193e8c55dca2824a60eb8e970235166587c6b87e6cd29730",
+      "incremental_hash": "0cbdd5827882d3ab27fe997e88df3be6caebb8fdeeab224c832edfefc7b7a247",
+      "replay_hash": "0cbdd5827882d3ab27fe997e88df3be6caebb8fdeeab224c832edfefc7b7a247",
       "matches": true
     },
     {
       "as_of": "2025-09-15T08:05:00.000000Z",
-      "incremental_hash": "717758b0a35aba4648d130640b609ec7f5c60402854615a4b5ca09782aa49b0d",
-      "replay_hash": "717758b0a35aba4648d130640b609ec7f5c60402854615a4b5ca09782aa49b0d",
+      "incremental_hash": "705f1ef4924c6e11d1cd8d54be890910a698bf609c962fb21011ce5ccee43a3c",
+      "replay_hash": "705f1ef4924c6e11d1cd8d54be890910a698bf609c962fb21011ce5ccee43a3c",
       "matches": true
     },
     {
       "as_of": "2025-09-18T07:00:00.000000Z",
-      "incremental_hash": "bfe4532caa970cf73f51611307418619ad2576c51e623afb75e28f340d995a99",
-      "replay_hash": "bfe4532caa970cf73f51611307418619ad2576c51e623afb75e28f340d995a99",
+      "incremental_hash": "b3bae66eac67294f59881b83fb2660a8fec871c313dedcb07e9f9b31f7beffea",
+      "replay_hash": "b3bae66eac67294f59881b83fb2660a8fec871c313dedcb07e9f9b31f7beffea",
       "matches": true
     },
     {
       "as_of": "2025-09-18T08:05:00.000000Z",
-      "incremental_hash": "5ef4a6ebab29a5a0454164877f9fbac43f6da304cedeeb7245ea8166996551ac",
-      "replay_hash": "5ef4a6ebab29a5a0454164877f9fbac43f6da304cedeeb7245ea8166996551ac",
+      "incremental_hash": "2a35c9c3d61255ac539904ceea388563665af3e409d59de2ff857f2c7a0646f2",
+      "replay_hash": "2a35c9c3d61255ac539904ceea388563665af3e409d59de2ff857f2c7a0646f2",
       "matches": true
     },
     {
       "as_of": "2025-09-20T08:05:00.000000Z",
-      "incremental_hash": "316d569a6eacd7b6818d6b8e27461b190ab1bea4417b74968888c66368e05d20",
-      "replay_hash": "316d569a6eacd7b6818d6b8e27461b190ab1bea4417b74968888c66368e05d20",
+      "incremental_hash": "73ea30bcbf8fa9899893edc91f2e0e615fd0442ca99a2dff1aee1cffabad6d74",
+      "replay_hash": "73ea30bcbf8fa9899893edc91f2e0e615fd0442ca99a2dff1aee1cffabad6d74",
       "matches": true
     },
     {
       "as_of": "2025-09-21T08:00:00.000000Z",
-      "incremental_hash": "b6df73691f379e75ebe22a7d892d6281e55fd8a2764ea35f3c37242f8af4e170",
-      "replay_hash": "b6df73691f379e75ebe22a7d892d6281e55fd8a2764ea35f3c37242f8af4e170",
+      "incremental_hash": "7dbcaef6dfd33250e93bf3074e8408ef5ce022e1bdacaa135d986a8b6165299b",
+      "replay_hash": "7dbcaef6dfd33250e93bf3074e8408ef5ce022e1bdacaa135d986a8b6165299b",
       "matches": true
     },
     {
       "as_of": "2025-09-22T07:00:00.000000Z",
-      "incremental_hash": "5478a9aee6bd51b7dd0a52c40dd6700c0bc465fe61bed22c83b5edfaf4d8ab94",
-      "replay_hash": "5478a9aee6bd51b7dd0a52c40dd6700c0bc465fe61bed22c83b5edfaf4d8ab94",
+      "incremental_hash": "b4422ced7fff2c9e1d4eb45206dd1a6c276c2189b538aaf4c8134a9bff84be81",
+      "replay_hash": "b4422ced7fff2c9e1d4eb45206dd1a6c276c2189b538aaf4c8134a9bff84be81",
       "matches": true
     }
   ],

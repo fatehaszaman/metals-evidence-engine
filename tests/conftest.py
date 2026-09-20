@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 @pytest.fixture
 def hypothesis():
-    return Hypothesis.load(ROOT / "hypotheses/cn_copper_tightening.json")
+    return Hypothesis.load(ROOT / "hypotheses/in_bd_copper_availability.json")
 
 
 @pytest.fixture

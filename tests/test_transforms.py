@@ -14,14 +14,14 @@ def test_spread_sign_exactness_and_lineage():
     assert spread.value == "200"
     assert spread.parents == (data[0].id, data[1].id)
     assert spread.contracts == ("DEMO-CU-202510", "DEMO-CU-202511")
-    assert spread.unit == "CNY/tonne"
+    assert spread.unit == "USD/tonne"
 
 
 @pytest.mark.parametrize(
     "change",
     [
         {"source": "other"},
-        {"unit": "USD/tonne"},
+        {"unit": "USD/lb"},
         {"metal": "ALUMINUM"},
         {"geography": "US"},
     ],

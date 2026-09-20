@@ -1,14 +1,16 @@
-# Copper evidence evaluation
+# Copper hypothesis evidence evaluation
 
 As of `2025-09-19T09:00:00.000000Z`. Engine version `0.1.0`.
 
-Do the covered observations jointly support a hypothesis of tighter readily deliverable copper conditions in China?
+Research scope: `IN-BD`. The hypothesis specifies regional coverage and interpretation limits.
+
+What evidence supports, weakens, contradicts, or leaves unresolved the hypothesis of reduced readily deliverable copper availability relevant to Bangladesh–India cable, conductor, power, and industrial supply chains?
 
 ## Evidence
 
 | Input | Evidence | Data quality | Reason |
 | --- | --- | --- | --- |
-| Nearby spread | SUPPORTS | OK | Observed change evaluated against UP expectation; absolute threshold 10 CNY/tonne. |
+| Nearby spread | SUPPORTS | OK | Observed change evaluated against UP expectation; absolute threshold 10 USD/tonne. |
 | Visible inventory | WEAKENS | OK, PRELIMINARY | Observed change evaluated against DOWN expectation; absolute threshold 1000 tonne. |
 | Refined production | WEAKENS | OK, PRELIMINARY | Observed change evaluated against DOWN expectation; absolute threshold 10000 tonne. |
 | Refined imports | INSUFFICIENT | OK, PRELIMINARY | Context only: this series has no unambiguous directional mapping. |
@@ -18,9 +20,9 @@ Do the covered observations jointly support a hypothesis of tighter readily deli
 
 Overall evidence state: **INCONCLUSIVE**. Material observations support opposing interpretations; no unified claim is justified.
 
-Observation quality: MODERATE. Operational quality of required observations, not hypothesis probability.
+Observation confidence: MODERATE. Observation confidence summarizes operational usability of required observations, not hypothesis probability. Per-input data quality is reported separately.
 
-SYNTHETIC DEMONSTRATION ONLY. All market values, contract identifiers, source names, and effective dates are invented test inputs. Evidence is conditional on the stated mechanism and source coverage. This does not establish actual China copper conditions, demand, causality, price forecasts, trading recommendations, or operational live-feed performance.
+SYNTHETIC DEMONSTRATION ONLY. All market values, contract identifiers, source names, and effective dates are invented test inputs. IN-BD denotes a research scope relevant to Bangladesh–India cable, conductor, power, and industrial supply chains, not verified country coverage or a combined regional balance. Evidence is conditional on the stated mechanism and source coverage. The engine evaluates a hypothesis; it does not declare the physical market tightening or loosening. This does not establish actual India or Bangladesh copper conditions, demand, causality, price forecasts, trading recommendations, or live market-data capability. Copper first; aluminum second and not yet implemented as a case study.
 
 ## Alternative explanations
 
@@ -29,11 +31,15 @@ SYNTHETIC DEMONSTRATION ONLY. All market values, contract identifiers, source na
 - Contract-specific positioning or financing affected nearby spreads.
 - Customs revisions or reporting-definition changes altered comparable coverage.
 - Higher production coincided with stronger demand not measured by this fixture.
+- Country-specific coverage, border frictions, or shipment timing differ between India and Bangladesh.
 
-## Audit
+## Provenance, revisions, and as_of reconstruction
 
-Report hash: `81861eeb0f72875094774d035205071f75cc0de7214c3df3b80b9638f53084ee`
+The JSON report includes source, series, geography, event/publication/receipt times, revision, raw-payload hash, and observation ID for each scoped input.
+The archive retains original raw payloads. Only events published and received by the as_of cutoff are eligible; later revisions cannot rewrite an earlier report.
 
-Hypothesis hash: `afcd7238c757a64f75aa4466acc9b17932231a323d0443b2735b17d1867a515d`
+Report hash: `26fd085bae6f09ba3ca001882329acf202036410beb9cb1c6da9802be831983b`
+
+Hypothesis hash: `aae8557a6a5afc439a1d476ce85f8c7afcda20ee844310dd004e0be5d4fcc08b`
 
 Parent observation IDs and exact construct lineage are in the JSON report.

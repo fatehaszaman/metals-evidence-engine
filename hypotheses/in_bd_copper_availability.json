@@ -1,0 +1,85 @@
+{
+  "id": "IN-BD-CU-AVAILABILITY-DEMO",
+  "version": "1.1.0",
+  "question": "What evidence supports, weakens, contradicts, or leaves unresolved the hypothesis of reduced readily deliverable copper availability relevant to Bangladesh–India cable, conductor, power, and industrial supply chains?",
+  "mechanism": "A widening earlier-minus-later contract spread and falling covered inventory are modeled expectations under the hypothesis of reduced readily deliverable copper availability relevant to India and Bangladesh. Rising covered refined output can weaken that supply-side interpretation, all else equal. Country-specific coverage and cross-border transmission require explicit validation; this synthetic research scope is not a pooled regional balance. These are contestable associations, not identified causal effects.",
+  "metal": "COPPER",
+  "geography": "IN-BD",
+  "effective_time": "2025-01-01T00:00:00Z",
+  "alternative_explanations": [
+    "Inventory moved between covered and uncovered locations rather than being consumed.",
+    "Publication lags and different observation frequencies obscure economic timing.",
+    "Contract-specific positioning or financing affected nearby spreads.",
+    "Customs revisions or reporting-definition changes altered comparable coverage.",
+    "Higher production coincided with stronger demand not measured by this fixture.",
+    "Country-specific coverage, border frictions, or shipment timing differ between India and Bangladesh."
+  ],
+  "boundary": "SYNTHETIC DEMONSTRATION ONLY. All market values, contract identifiers, source names, and effective dates are invented test inputs. IN-BD denotes a research scope relevant to Bangladesh–India cable, conductor, power, and industrial supply chains, not verified country coverage or a combined regional balance. Evidence is conditional on the stated mechanism and source coverage. The engine evaluates a hypothesis; it does not declare the physical market tightening or loosening. This does not establish actual India or Bangladesh copper conditions, demand, causality, price forecasts, trading recommendations, or live market-data capability. Copper first; aluminum second and not yet implemented as a case study.",
+  "rules": [
+    {
+      "name": "Nearby spread",
+      "kind": "spread_change",
+      "source": "synthetic-in-bd-metals",
+      "series": "settlement:",
+      "unit": "USD/tonne",
+      "expected": "UP",
+      "threshold": "10",
+      "max_age_days": 7,
+      "max_gap_days": 7,
+      "material": true,
+      "rationale": "Widening earlier-minus-later reference settlement spread conditionally supports the reduced-availability hypothesis; same contract pair required. Synthetic USD quotations are not local exchange prices."
+    },
+    {
+      "name": "Visible inventory",
+      "kind": "level_change",
+      "source": "synthetic-in-bd-metals",
+      "series": "inventory",
+      "unit": "tonne",
+      "expected": "DOWN",
+      "threshold": "1000",
+      "max_age_days": 7,
+      "max_gap_days": 7,
+      "material": true,
+      "rationale": "Falling covered stocks support the hypothesis only if source definition and coverage are comparable."
+    },
+    {
+      "name": "Refined production",
+      "kind": "level_change",
+      "source": "synthetic-in-bd-metals",
+      "series": "refined_production",
+      "unit": "tonne",
+      "expected": "DOWN",
+      "threshold": "10000",
+      "max_age_days": 60,
+      "max_gap_days": 35,
+      "material": true,
+      "rationale": "Higher covered supply weakens this narrow supply-side mechanism, conditional on unchanged unobserved demand. Coverage is synthetic, not a sum of India and Bangladesh production."
+    },
+    {
+      "name": "Refined imports",
+      "kind": "context",
+      "source": "synthetic-in-bd-metals",
+      "series": "refined_imports",
+      "unit": "tonne",
+      "expected": "NONE",
+      "threshold": "0",
+      "max_age_days": 60,
+      "max_gap_days": 35,
+      "material": false,
+      "rationale": "Import changes may reflect demand, relative prices, timing, or substitution; direction alone cannot classify physical availability. No bilateral India–Bangladesh trade coverage is claimed."
+    },
+    {
+      "name": "Shipments",
+      "kind": "context",
+      "source": "synthetic-in-bd-metals",
+      "series": "shipments",
+      "unit": "tonne",
+      "expected": "NONE",
+      "threshold": "0",
+      "max_age_days": 30,
+      "max_gap_days": 35,
+      "material": false,
+      "rationale": "Optional contextual input; explicitly unavailable before local receipt, even if published earlier."
+    }
+  ]
+}

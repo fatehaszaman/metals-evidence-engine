@@ -214,10 +214,21 @@ def evaluate(archive: Archive, hypothesis: Hypothesis, cutoff: str) -> dict:
         "evidence": rows,
         "material_conflict": conflict,
         "overall_evidence_state": overall,
+        "observation_confidence": observation_quality,
+        # Retained for consumers of the original report schema.
         "observation_quality": observation_quality,
         "quality_boundary": (
-            "Operational quality of required observations, not hypothesis probability."
+            "Observation confidence summarizes operational usability of required observations, "
+            "not hypothesis probability. Per-input data quality is reported separately."
         ),
+        "provenance": [
+            {
+                "observation_id": o.id,
+                "raw_payload_sha256": o.raw_hash,
+                **{key: value for key, value in o.to_dict().items() if key != "raw_payload"},
+            }
+            for o in scoped
+        ],
         "why": why,
         "boundary": hypothesis.boundary,
     }
@@ -227,9 +238,12 @@ def evaluate(archive: Archive, hypothesis: Hypothesis, cutoff: str) -> dict:
 
 def markdown(report: dict) -> str:
     lines = [
-        "# Copper evidence evaluation",
+        f"# {report['hypothesis']['metal'].title()} hypothesis evidence evaluation",
         "",
         f"As of `{report['as_of']}`. Engine version `{report['engine_version']}`.",
+        "",
+        f"Research scope: `{report['hypothesis']['geography']}`. "
+        "The hypothesis specifies regional coverage and interpretation limits.",
         "",
         report["hypothesis"]["question"],
         "",
@@ -253,7 +267,8 @@ def markdown(report: dict) -> str:
             "",
             f"Overall evidence state: **{report['overall_evidence_state']}**. {report['why']}",
             "",
-            f"Observation quality: {report['observation_quality']}. {report['quality_boundary']}",
+            f"Observation confidence: {report['observation_confidence']}. "
+            f"{report['quality_boundary']}",
             "",
             report["boundary"],
             "",
@@ -261,7 +276,12 @@ def markdown(report: dict) -> str:
             "",
             *[f"- {a}" for a in report["hypothesis"]["alternative_explanations"]],
             "",
-            "## Audit",
+            "## Provenance, revisions, and as_of reconstruction",
+            "",
+            "The JSON report includes source, series, geography, event/publication/receipt times, "
+            "revision, raw-payload hash, and observation ID for each scoped input.",
+            "The archive retains original raw payloads. Only events published and received by "
+            "the as_of cutoff are eligible; later revisions cannot rewrite an earlier report.",
             "",
             f"Report hash: `{report['report_hash']}`",
             "",

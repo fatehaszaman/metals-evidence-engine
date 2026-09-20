@@ -1,13 +1,35 @@
 # Metals Evidence Engine
 
-Given only information available at a point in time, what evidence supports,
-weakens, or leaves unresolved a hypothesis about physical copper conditions?
-This project makes that question executable, with original payloads, revisions,
-contract-level lineage, explicit evidence rules, and deterministic replay.
+Given only information actually available at a point in time, what evidence supports,
+weakens, contradicts, or leaves unresolved a hypothesis about copper and aluminum
+conditions relevant to Bangladesh–India cable, conductor, power, and industrial
+supply chains?
+
+This project is a point-in-time hypothesis evidence evaluator, with original payloads,
+provenance, revisions, contract-level lineage, explicit evidence rules, and deterministic
+`as_of()` reconstruction. Its regional research scope is India and Bangladesh.
+It evaluates evidence for a defined hypothesis; it does not declare the physical
+market "tightening" or "loosening."
 
 **Status: working synthetic-data vertical slice, not a live market-data service.**
 All included market values and contract identifiers are invented fixtures.
 The repository is employer-neutral and makes no investment-performance claims.
+Keep this repository private. Development remains **copper first, aluminum second**:
+the working synthetic case is copper; an aluminum case is not yet implemented.
+
+## Regional scope
+
+The intended use is research on metal availability inputs relevant to cable,
+conductor, power, and industrial supply chains in Bangladesh and India. Inventory,
+production, imports, shipments, and contract evidence must retain their actual
+source, country, product, coverage, units, and observation vintage.
+
+The demo's `IN-BD` identifier denotes an explicitly synthetic India–Bangladesh
+research scope, not a measured national total, bilateral flow, or pooled regional
+balance. Its USD-denominated contract fixtures are invented reference quotations,
+not prices from an Indian or Bangladeshi exchange. No FX conversion or empirical
+rescaling is implied by the toy values. Real integration must preserve country-specific
+definitions and justify cross-country comparisons rather than relabeling observations.
 
 ## Run the complete slice
 
@@ -56,8 +78,11 @@ These labels concern the stated hypothesis, not a claim about actual markets.
 | Refined imports | INSUFFICIENT | Context only; direction is economically ambiguous. |
 | Shipments | UNAVAILABLE | Published, but not yet received at the cutoff. |
 
-Overall: **INCONCLUSIVE**. Observation quality is reported separately and is not
-a probability that the hypothesis is true.
+Overall: **INCONCLUSIVE**. Material conflicts remain visible rather than being
+averaged into a directional market-state label. Observation confidence is reported
+separately from the conclusion and per-input data quality; it is an operational
+usability rubric, not a probability that the hypothesis is true.
+Reports also retain provenance, revisions, and the explicit `as_of` cutoff.
 
 ## Implemented
 
@@ -94,8 +119,8 @@ revision and later observations.
 
 ## Boundaries
 
-No live provider adapter, proprietary data, China market coverage, calibrated
-economic thresholds, shipment reconciliation, full physical balance, aluminum
+No live provider adapter, proprietary data, verified India or Bangladesh market
+coverage, calibrated economic thresholds, shipment reconciliation, full physical balance, aluminum
 case study, continuous futures series, or deployed monitoring is claimed.
 The metal enum permits aluminum but the implemented research case is copper only.
 
@@ -116,6 +141,7 @@ archived envelopes, declared versions, and ingestion-time integrity.
 
 No buy/sell signals, price predictions, portfolio construction, causal-identification
 claims, employer branding, or claims about an employer's internal methodology.
+This is neither a trading strategy nor a live market-data platform.
 
 ## Documentation
 

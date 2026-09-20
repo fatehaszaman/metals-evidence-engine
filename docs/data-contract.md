@@ -9,7 +9,7 @@ The ingestion format is UTF-8 JSONL containing one canonical envelope per line.
 | --- | --- |
 | source, series | Nonempty provider and series identifiers; never silently merge providers. |
 | metal | COPPER or ALUMINUM; copper only is exercised in the research demo. |
-| geography | Explicit coverage identifier; CN in the fixture. |
+| geography | Explicit coverage identifier; IN-BD denotes the synthetic India–Bangladesh research scope, not a measured regional aggregate. |
 | event_time | Realized observation/period-end time, with timezone. |
 | published_time | When that version became available from its source. |
 | ingested_time | When this system actually received the version. |
@@ -36,6 +36,12 @@ daily stocks into a mass balance.
 The record ID hashes the canonical envelope, including receipt time and embedded
 contract metadata. The raw-payload hash independently covers the retained UTF-8
 source text, not the normalized observation.
+
+JSON reports expose a separate `provenance` list with these identifiers, source,
+series, geography, revision and all three timestamps. Raw payloads remain in the
+archive. `observation_confidence` is distinct from each evidence row's `quality`
+flags and from the hypothesis conclusion; `observation_quality` is retained as a
+compatibility alias for the same confidence rubric.
 
 An identical envelope is a no-op. A different envelope with the same
 `(source, series, event_time, revision)` raises an error instead of silently

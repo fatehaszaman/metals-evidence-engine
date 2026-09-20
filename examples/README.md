@@ -4,6 +4,17 @@ These generated reports are engineering demonstrations, not reconstructions of
 actual copper-market conditions. Every observation, contract ID, and declared
 historical rule-effective date is synthetic.
 
+The cases evaluate a copper-availability hypothesis relevant to Bangladesh–India
+cable, conductor, power, and industrial supply chains. `IN-BD` is a synthetic
+India–Bangladesh research scope, not verified national coverage or a combined
+regional balance. Copper comes first; aluminum is second and has no implemented
+case yet. This is not a trading strategy or a live market-data platform.
+
+The invented USD reference quotations are neither local exchange prices nor
+converted historical observations. Their toy magnitudes test software behavior,
+not actual price levels. Conflicting evidence stays `INCONCLUSIVE`, with observation
+confidence separate from data quality and the hypothesis conclusion.
+
 ## Reproduce
 
 ```bash
@@ -17,7 +28,7 @@ uv run metals-evidence audit > examples/replay-audit.json
 
 ## What to inspect
 
-- **Conflict:** the nearby spread changes from -100 to +200 CNY/tonne while
+- **Conflict:** the nearby spread changes from -100 to +200 USD/tonne while
   visible inventory rises from 100,000 to 120,000 tonnes. Output is INCONCLUSIVE.
 - **Revision:** a later inventory revision changes the latest stock to 90,000
   tonnes. Inventory evidence flips, but production still weakens the hypothesis,
@@ -30,5 +41,7 @@ uv run metals-evidence audit > examples/replay-audit.json
   receipt-time checkpoint, including late data and the revision.
 
 The JSON report exposes all parent IDs, observed values for curve constructs,
-rule content, snapshot IDs, and hashes. Raw envelopes can be regenerated with
+rule content, snapshot IDs, and hashes. Its separate provenance list records source,
+geography, revisions, publication and receipt times, and raw-payload hashes.
+Raw envelopes can be regenerated with
 `metals-evidence fixtures` and matched by their deterministic content IDs.
