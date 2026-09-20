@@ -15,7 +15,8 @@ separate owner decision, and no build command changes repository visibility.
 ## Real-data gates still open
 
 - Select one public source with documented access and redistribution rights.
-- Implement and test its adapter rather than calling fixtures “live.”
+- Complete canonical mapping beyond the implemented quarantined API preview
+  collector; never call synthetic evaluator fixtures “live.”
 - Document actual vintage coverage and local collection start.
 - Validate timezone, units, definition, contract-universe completeness, and revisions.
 - Write a bounded, source-cited real-data case study.

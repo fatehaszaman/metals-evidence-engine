@@ -9,6 +9,7 @@ from pathlib import Path
 
 from metals_evidence.archive import Archive
 from metals_evidence.capture import Intake, load_policy, watch
+from metals_evidence.comtrade import CollectionStore, PreviewQuery, collect
 from metals_evidence.demo import DEFAULT_CUTOFF, parity_audit, records, scenario
 from metals_evidence.evidence import Hypothesis, evaluate, json_report, markdown
 from metals_evidence.judge import review_files
@@ -50,12 +51,29 @@ def parser() -> argparse.ArgumentParser:
     for flag in ("input", "policy", "as-of"):
         score.add_argument(f"--{flag}", required=True)
     score.add_argument("--db", help="Existing archive for baseline/revision checks")
+    api = commands.add_parser(
+        "collect-comtrade", help="Collect real API preview into quarantine only"
+    )
+    api.add_argument("--reporter", choices=("IN", "BD"), required=True)
+    api.add_argument("--partner", choices=("IN", "BD", "WORLD"), required=True)
+    api.add_argument("--period", required=True, help="YYYYMM, not a publication timestamp")
+    api.add_argument("--commodity", required=True, help="Explicit six-digit copper code")
+    api.add_argument("--flow", choices=("M", "X"), default="M")
+    api.add_argument("--output", required=True, help="Private raw/staging archive directory")
     return root
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
     try:
+        if args.command == "collect-comtrade":
+            query = PreviewQuery(
+                args.reporter, args.partner, args.period, args.commodity, args.flow
+            )
+            with CollectionStore(args.output) as store:
+                receipt = collect(query, store)
+            print(canonical(receipt))
+            return 0 if receipt["state"] in {"QUARANTINED_PREVIEW", "NO_DATA_REPORTED"} else 1
         if args.command == "score":
             if args.db and not Path(args.db).is_file():
                 raise ValueError("score archive does not exist")

@@ -13,6 +13,13 @@ used, and no numeric economic observations were accepted into the engine.
 The probe was run in the development environment, not installed as a repository
 collector. SDK-extracted content is not an archive of original HTTP response bytes.
 
+Subsequently, the repository's stdlib-based `collect-comtrade` command made actual
+anonymous API requests and archived original completed response bytes. That code
+is installed in the repository and has offline transport tests. The
+[API collection record](../../examples/comtrade-collection-smoke.json) distinguishes
+quarantined India rows, an empty Bangladesh response and early rejected attempts.
+No observations were promoted to canonical evidence and no website table was scraped.
+
 - **TradeStat interface:** page and HTML retrieval succeeded for the
   [country-wise all-commodities export form](https://tradestat.commerce.gov.in/meidb/country_wise_all_commodities_export).
 - **TradeStat older route:** the request to the
@@ -178,8 +185,10 @@ and keep any necessary protected retrieval details in access-controlled storage.
 Useful proposed SQL identities are a source plus discovery key for link discovery,
 SHA-256 for immutable content storage, and a separate receipt-event ID for each
 authorized fetch. Do not put a unique constraint on URL alone for all releases.
-The current intake archive deduplicates identical delivery bytes and does **not**
-yet maintain this separate receipt-event registry.
+The local-file intake archive deduplicates identical delivery bytes without a
+separate receipt-event registry. The new Comtrade collector **does** maintain a
+separate append-only receipt event for every fetch, alongside content-addressed
+raw storage. It is not a general discovered-link registry.
 
 Minimum adapter tests should cover relative links, duplicate links, redirects,
 query parameters that change report identity, unchanged bytes at multiple URLs,
@@ -193,10 +202,10 @@ and its hash separately; extraction must not discard tables, footnotes, units or
 source locations. Follow the [text-first storage policy](README.md#text-first-storage-and-bounded-memory);
 do not label the existing whole-delivery intake as a streaming implementation.
 
-## Next executable integration
+## Next integration boundary
 
-Start with one narrow, authorized UN Comtrade API query and its release metadata,
-not a broad scrape across every source. Then implement and test its source-specific
-adapter before enabling local delivery intake. The existing
-[API-first guide](README.md) and [intake controls](../data-intake.md) define that
-handoff; neither claims a connected or continuously running collector.
+The narrow Comtrade preview query is implemented and has been exercised against
+the public API. Next verify release metadata, completeness, units and revision
+semantics, then test canonical mapping before enabling delivery intake.
+The [API-first guide](README.md) and [intake controls](../data-intake.md) define
+that handoff. The collector is manually invoked, not a continuously running service.

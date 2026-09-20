@@ -3,7 +3,9 @@
 The research scope remains India and Bangladesh, copper first and aluminum second.
 This layer handles potentially messy deliveries without turning the evaluator into
 a trading strategy, a live market-data platform, or a market-state classifier.
-No real provider feed or continuously deployed service is included.
+A separate experimental [API preview collector](live-sources/README.md) fetches
+real responses into quarantine only. No real feed into this intake layer or
+continuously deployed service is included.
 
 ## Trust boundaries
 

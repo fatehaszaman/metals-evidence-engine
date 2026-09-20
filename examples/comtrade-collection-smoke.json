@@ -1,0 +1,72 @@
+{
+  "title": "Comtrade API collection: technical smoke test",
+  "checked_at_utc_date": "2026-09-20",
+  "purpose": "Technical retrieval evidence only; no trade values or approved economic observations.",
+  "source_documentation": "https://uncomtrade.org/docs/un-comtrade-api/",
+  "collector_version": "comtrade-preview-v1",
+  "promoted_observations": 0,
+  "shared_blockers": [
+    "PREVIEW_COMPLETENESS_UNVERIFIED",
+    "PUBLICATION_TIME_UNVERIFIED",
+    "REVISION_MAPPING_UNVERIFIED",
+    "CONTENT_TYPE_UNVERIFIED"
+  ],
+  "checks": [
+    {
+      "reporter": "IN",
+      "provider_reporter_code": "699",
+      "partner": "WORLD",
+      "period": "202501",
+      "commodity": "740311",
+      "flow": "M",
+      "request_url": "https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=699&partnerCode=0&period=202501&cmdCode=740311&flowCode=M&maxrecords=500",
+      "receipt_id": "8a5bda51-d5b8-4539-8e8e-8bcaf892cfad",
+      "received_at": "2026-09-20T16:10:37.288936+00:00",
+      "http_status": 200,
+      "bytes_archived": 5435,
+      "raw_sha256": "cd0a780b22acb3d2080d7f6644fd0bcc4c15f1ec2bf881aed9c9f44173cd7693",
+      "row_count": 6,
+      "state": "QUARANTINED_PREVIEW",
+      "selected_response_headers": {},
+      "complete_body": true
+    },
+    {
+      "reporter": "BD",
+      "provider_reporter_code": "50",
+      "partner": "WORLD",
+      "period": "202501",
+      "commodity": "740311",
+      "flow": "M",
+      "request_url": "https://comtradeapi.un.org/public/v1/preview/C/M/HS?reporterCode=50&partnerCode=0&period=202501&cmdCode=740311&flowCode=M&maxrecords=500",
+      "receipt_id": "92644eca-9c5f-411f-9967-b2d3588afaa7",
+      "received_at": "2026-09-20T16:10:48.007054+00:00",
+      "http_status": 200,
+      "bytes_archived": 58,
+      "raw_sha256": "c393e9c9861a0adf3ff5113e50d373fd98aee3faaee07c7ebfebf891e7eba63a",
+      "row_count": 0,
+      "state": "NO_DATA_REPORTED",
+      "selected_response_headers": {},
+      "complete_body": true
+    }
+  ],
+  "earlier_attempts": [
+    {
+      "receipt_id": "e751f74e-2569-4a1d-a441-e3e10f9a88e9",
+      "state": "SCHEMA_REJECTED",
+      "reason": "Initial handler rejected absent content-type metadata despite a preserved HTTP 200 JSON body."
+    },
+    {
+      "receipt_id": "34483f51-5731-43a5-8366-f4a8cde86f4b",
+      "state": "SCHEMA_REJECTED",
+      "reason": "Header-case normalization did not resolve absent metadata; receipt preserved."
+    }
+  ],
+  "interpretation_limits": [
+    "No data reported is not zero trade.",
+    "A complete HTTP body is not complete economic coverage.",
+    "A current retrieval for 202501 is not evidence of what was published or received in 2025.",
+    "The final handler permits missing media type only into quarantine with an explicit blocker; wrong media types or invalid JSON still fail.",
+    "Raw responses and staging rows remain in ignored local output storage and are not redistributed in this artifact.",
+    "No continuous collector, deployed scheduler, approved source adapter or real-time market-data service is claimed."
+  ]
+}

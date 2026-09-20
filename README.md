@@ -11,12 +11,21 @@ provenance, revisions, contract-level lineage, explicit evidence rules, and dete
 It evaluates evidence for a defined hypothesis; it does not declare the physical
 market "tightening" or "loosening."
 
-**Status: synthetic research slice with guarded file intake and advisory LLM review,
-not a connected live market-data service.**
-All included market values and contract identifiers are invented fixtures.
+**Status: synthetic research evaluator, guarded intake, advisory LLM review, and
+an experimental real API preview collector that writes only to quarantine.**
+All checked-in market values and contract identifiers are invented fixtures.
+The collector has made actual public API requests; no real observations have been
+promoted into the research archive. No continuous service is deployed.
 The repository is employer-neutral and makes no investment-performance claims.
 Keep this repository private. Development remains **copper first, aluminum second**:
 the working synthetic case is copper; an aluminum case is not yet implemented.
+
+Software engineering and infrastructure are the means of making the research
+auditable: explicit data contracts, bounded collection, immutable provenance,
+testable quality gates and reproducible historical queries. They do not substitute
+for economic reasoning or turn uncertain observations into facts.
+See [engineering evidence and preserved milestones](docs/engineering-evidence.md)
+for the implemented responsibilities and the original 86-test baseline.
 
 ## Regional scope
 
@@ -104,7 +113,31 @@ Reports also retain provenance, revisions, and the explicit `as_of` cutoff.
   evidence-quote checks, immutable review history; no automatic data correction.
 - **Requirement scores:** per-check 100/0/unassessed, overall score and assessment
   coverage, immutable scorecards and non-overridable mandatory quarantine gates.
+- **Real-source collection:** anonymous UN Comtrade copper preview requests,
+  bounded response reads, original bytes, append-only receipt events and JSONL
+  staging. All rows remain unverified; no automatic handoff to the evaluator.
 - **Verification:** adversarial tests and a Python 3.11/3.12/3.13 GitHub Actions matrix.
+
+## Collect a real API response without pretending it is approved evidence
+
+```bash
+uv run metals-evidence collect-comtrade \
+  --reporter IN --partner WORLD --period 202501 --commodity 740311 \
+  --output outputs/comtrade
+# Use --reporter BD for Bangladesh. No subscription key is used by this preview.
+```
+
+This command was exercised on 2026-09-20: the India request returned six rows,
+all quarantined; the Bangladesh request returned no rows, not a measured zero.
+Both are current retrievals for a historical reporting period, not historical
+publication vintages. The [technical collection record](examples/comtrade-collection-smoke.json)
+contains receipt metadata and hashes, not trade values.
+
+Publication time, source revision semantics and complete query coverage remain
+unverified. Missing content-type metadata is also recorded as a blocker rather
+than fabricated. Exit code 0 means the collection operation completed, not that
+the data passed research-quality gates. See the [runnable source guide](docs/live-sources/README.md)
+for exact boundaries, request codes, failure states and next release gates.
 
 ## Messy data and the LLM judge
 
@@ -144,16 +177,25 @@ contract, runnable review command, adapter interface and operational limits.
 
 ### Pipeline pseudocode and live-source boundary
 
-This pseudocode summarizes the controls, not a ready-to-run provider integration.
-**No live source is connected and no continuous service is deployed.** An authorized
-source adapter, its credentials/permissions and supervised operation remain integration
-work; optional LLM review is a separate explicit call, not an automatically running job.
+This pseudocode summarizes the controls, not an end-to-end live integration.
+**The API preview collector stops at quarantine; no continuous service is deployed.**
+Release metadata, canonical mapping, permissions for broader use and supervised
+operation remain integration work. Optional LLM review is a separate explicit call,
+not an automatically running job.
 
 ```text
 # Research scope: India and Bangladesh; copper first, aluminum second.
 # AVAILABLE: local file watcher, guarded intake, advisory judge, as_of evaluator.
-# NOT CONNECTED: authorized live provider -> trusted adapter -> local delivery files.
+# AVAILABLE: real Comtrade preview -> immutable raw archive + quarantined JSONL.
+# NOT CONNECTED: verified source release -> canonical adapter -> delivery files.
 # A polling interval is not proof of real-time source publication.
+
+when the researcher explicitly runs the API preview collector:
+    request one validated country / product / period scope on an allowed HTTPS host
+    preserve bounded original bytes and a distinct receipt event
+    reject redirects, access failures, invalid JSON and wrong query scope
+    retain absent metadata, preview completeness and revision questions as blockers
+    write only unverified staging rows; NEVER promote into canonical evidence
 
 when a completed local delivery arrives:
     preserve original bytes, first local receipt time, and policy snapshot
@@ -211,8 +253,9 @@ revision and later observations.
 
 ## Boundaries
 
-No live provider adapter, proprietary data, verified India or Bangladesh market
-coverage, calibrated economic thresholds, shipment reconciliation, full physical balance, aluminum
+No approved real-data adapter into the evaluator, proprietary data, verified
+complete India or Bangladesh market coverage, calibrated economic thresholds,
+shipment reconciliation, full physical balance, aluminum
 case study, continuous futures series, or deployed monitoring is claimed.
 The metal enum permits aluminum but the implemented research case is copper only.
 
@@ -241,6 +284,8 @@ This is neither a trading strategy nor a live market-data platform.
 
 - [Architecture and algorithms](docs/architecture.md): time semantics, algorithms,
   complexity, lineage, and limits.
+- [Engineering evidence and milestones](docs/engineering-evidence.md): how software
+  and infrastructure support research, with the original implementation preserved.
 - [Data contract](docs/data-contract.md): units, revisions, provenance, and ingestion.
 - [Guarded intake and advisory review](docs/data-intake.md): messy deliveries,
   quarantine, LLM proposals, audit history and live-feed boundaries.
@@ -253,6 +298,6 @@ This is neither a trading strategy nor a live market-data platform.
 - [Case studies](examples/README.md): conflict, later revision, stale data, and definition breaks.
 - [Release checklist](docs/release-checklist.md): conditions before considering public release.
 
-The next scope is one documented authorized-data adapter with honest historical-vintage
-coverage, not a dashboard or a trading strategy. Keep the repository private until
+The next scope is verified release metadata, coverage and a canonical mapping for
+the first source, not a dashboard or a trading strategy. Keep the repository private until
 its owner explicitly decides to publish it.

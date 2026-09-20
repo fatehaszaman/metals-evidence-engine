@@ -4,11 +4,11 @@ This is the source-access and implementation guide for the private Metals Eviden
 Engine. Its research scope is India and Bangladesh, copper first and aluminum second,
 for cable, conductor, power and industrial supply chains.
 
-**Status: no live economic-data source is connected, no source adapter is implemented,
-and no continuous collection service is deployed.** Public documentation, interface
-HTML and an API field dictionary were inspected on 2026-09-20. That is source-access
-verification, not proof of complete data extraction or a working live feed.
-The existing `capture` command watches local files; it does not make API requests.
+**Status: a real anonymous UN Comtrade preview collector is implemented and tested;
+it writes only to quarantine. No continuous service or approved real-data research
+pipeline is deployed.** Public documentation, interface HTML, code lists and an API
+field dictionary were inspected on 2026-09-20. Actual API collection was then tested.
+The separate `capture` command still watches local files; it makes no API requests.
 
 ## Access order
 
@@ -30,10 +30,11 @@ SQLite-backed SQL storage and shell-invoked commands; it has no Java collector o
 deployed Bash scheduler.
 
 - **Python:** implemented envelope validation, requirement scoring, evidence
-  evaluation and local delivery intake. Source-specific API clients, HTML/PDF
-  parsers and link-validation adapters remain to be implemented.
+  evaluation, local delivery intake and the bounded Comtrade preview client.
+  HTML/PDF parsers and a general link-discovery adapter remain unimplemented.
 - **SQL / SQLite:** implemented append-only observations, raw deliveries, decisions,
-  requirement scorecards and advisory reviews. A source-discovery/link registry
+  requirement scorecards, advisory reviews and separate collector receipt events.
+  A source-discovery/link registry
   would be a separate future schema, not an existing table.
 - **Bash:** documented repeatable CLI commands for intake, scoring, tests and replay.
   Deployment scripts would manage exit codes, supervision and redacted logs;
@@ -59,7 +60,7 @@ See the [link-validation and deduplication contract](SCRAPING.md#link-validation
 for the proposed adapter rules. These do not override quarantine or the
 `INCONCLUSIVE` boundary when economic evidence conflicts.
 
-## Recommended first API: UN Comtrade
+## Implemented experimental API collector: UN Comtrade
 
 UN Comtrade documents anonymous preview APIs and subscription-key APIs, including
 data availability and publication-update routes; access depends on the API product
@@ -69,7 +70,7 @@ Country/product coverage must be checked before claiming India or Bangladesh cov
 
 ### Request shape
 
-The following is a documentation-derived template, **not a tested data request**.
+The following describes the configurable request shape; specific live checks follow.
 Resolve parameters against current official code lists and the developer portal;
 do not guess country codes, product mappings or available months
 ([API guide](https://uncomtrade.org/docs/un-comtrade-api/),
@@ -99,6 +100,71 @@ Therefore `HTTP 200`, a nonempty response, or fewer than the requested maximum
 records is not alone a completeness proof. Establish an explicit coverage check
 using the provider's supported metadata/count/download mechanisms before accepting
 a query as complete. Do not invent offset pagination or enumerate around access limits.
+
+### Runnable collection and observed results
+
+```bash
+uv run metals-evidence collect-comtrade \
+  --reporter IN --partner WORLD --period 202501 --commodity 740311 \
+  --output outputs/comtrade
+uv run metals-evidence collect-comtrade \
+  --reporter BD --partner WORLD --period 202501 --commodity 740311 \
+  --output outputs/comtrade
+```
+
+The CLI maps India to provider code `699`, Bangladesh to `50`, and world partner
+selection to `0`. The country codes were checked against official
+[reporter](https://comtradeapi.un.org/files/v1/app/reference/Reporters.json) and
+[partner](https://comtradeapi.un.org/files/v1/app/reference/partnerAreas.json) lists.
+Do not substitute a generic country-code system. Product `740311` is refined,
+unwrought copper cathodes and sections of cathodes in the
+[HS 2022 reference](https://comtradeapi.un.org/files/v1/app/reference/H6.json).
+The six-digit copper-code syntax gate does not certify that every possible
+`74xxxx` code is a valid source product; each configured product needs verification.
+
+On 2026-09-20 the India request returned HTTP 200 with six rows, all staged as
+unverified. The Bangladesh request returned HTTP 200 with no rows. This does not
+prove zero imports or a complete dataset. See the
+[technical smoke-test receipts](../../examples/comtrade-collection-smoke.json);
+raw economic responses remain in ignored local `outputs/`, not committed to Git.
+No market values are reproduced in that receipt artifact.
+
+The returned rows preserve secondary dimensions rather than summing apparently
+duplicate products. Both observed responses exposed no selected HTTP metadata
+headers to this environment. Early attempts therefore failed the strict content-type
+check; the final handler explicitly adds `CONTENT_TYPE_UNVERIFIED` when the header
+is absent and permits structurally valid JSON into quarantine only. It does not
+invent a media type or treat absent metadata as verified. Explicitly wrong media
+types and HTML bodies still fail.
+
+Implemented controls in [comtrade.py](../../src/metals_evidence/comtrade.py):
+
+- **Request boundary:** fixed HTTPS endpoint, validated request scope, redirects
+  refused, one attempt, a 30-second socket timeout and no hidden retries.
+  Socket timeout is not a total elapsed-time deadline.
+- **Raw preservation:** chunked reads up to 4 MiB plus one sentinel byte; oversized
+  bodies retain only a marked partial prefix and never become parsed rows.
+  Completed bytes are fsynced and content-addressed before parsing. Interrupted
+  reads remove the temporary partial file and produce a failure receipt.
+- **Receipt history:** each attempt has a distinct immutable SQLite receipt even
+  when content storage is deduplicated. Changed content at one URL is retained.
+  This is retrieval versioning, not an invented source-revision number.
+- **Schema and scope:** data-array shape, bounded row count, reported-count
+  consistency and reporter/partner/product/period/flow checks.
+- **Quarantine:** preview completeness, publication time and revision mapping are
+  always unresolved. Missing media type and the 500-row cap add explicit blockers.
+  There is no code path that creates canonical observations or ready deliveries.
+- **Operational outcomes:** `QUARANTINED_PREVIEW`, `NO_DATA_REPORTED`, `RATE_LIMITED`,
+  `ACCESS_BLOCKED`, `HTTP_ERROR`, `FETCH_FAILED`, `SCHEMA_REJECTED` and
+  `OVERSIZED_RESPONSE`. Available `Retry-After` metadata is retained; an operator
+  must honor it before any separate retry.
+
+Exit code 0 means a completed preview/no-data collection, not data approval;
+1 means a recorded collection failure; 2 denotes invalid arguments or CLI failure.
+`collector.db`, `raw/` and `staging/` are created inside the supplied output directory.
+Use ignored `outputs/` with suitable local access controls. CI transport tests use
+invented fixtures and never depend on API availability. No recurring collection
+has been installed, and collected data is not automatically sent to an LLM.
 
 ### Fields and point-in-time mapping
 
@@ -133,12 +199,13 @@ If publication time, units, coverage or revision semantics cannot be established
 retain the raw response and quarantine the candidate. A freshly downloaded current
 release cannot prove what was available at an earlier historical cutoff.
 
-### API client requirements before activation
+### Remaining requirements before research activation
 
-Implement a bounded client with explicit timeouts, response-size limits, an
-allowlisted HTTPS host, documented authentication and schema checks. Capture the
-exact response bytes before parsing, the UTC local receipt time, redacted request
-parameters, response status, relevant cache/revision headers and parser version.
+The experimental client implements bounded reads, an explicit socket timeout,
+fixed HTTPS host, anonymous access and initial schema checks. It captures original
+completed response bytes before parsing, UTC local receipt time, non-secret request
+parameters, response status, available selected headers and collector version.
+Further economic-schema, release and completeness validation remains required.
 Neither a provider's HTTP `Date` header nor local receipt proves publication time.
 
 Honor provider limits and `Retry-After`; cap retries for transient failures.
@@ -214,7 +281,8 @@ approved source and permissions
     -> as_of() hypothesis evaluation; material conflict stays INCONCLUSIVE
 ```
 
-These source-adapter steps are a specification, not existing automated code.
+The collector implements retrieval, raw storage and unverified staging only.
+Canonical mapping, scoring and delivery handoff in this diagram remain a specification.
 The runnable pieces are documented in [guarded intake and review](../data-intake.md).
 Do not add arbitrary metadata keys to the strict canonical envelope. Keep the full
 source manifest separately and preserve source text/structured provenance inside
@@ -230,7 +298,8 @@ require an explicit conservative time policy or quarantine, not fabricated preci
 Use UTF-8 `.txt` for extracted source passages and `.jsonl` for structured,
 line-delimited staging records and collection logs. Keep README documentation in
 plain-text Markdown; do not create PDF or Word copies just to describe the pipeline.
-These are proposed collector storage conventions, not new accepted intake formats.
+JSONL staging is implemented in the preview collector. TXT extraction is a
+convention for future document parsers, not a new accepted intake format.
 
 - **Preserve originals:** retain original API response bytes, HTML and downloadable
   documents in a controlled raw archive. A TXT extraction is a derived view, not
@@ -251,15 +320,16 @@ These are proposed collector storage conventions, not new accepted intake format
 The current `capture` implementation reads a complete ready file and parses its
 JSON in memory. Its 10 MiB processing limit is checked after bytes are read and
 preserved; it is **not** a streaming parser or a pre-read memory cap.
-Bound delivery size in the trusted producer today. A streaming/bounded-read
-collector and retention policy must be implemented and benchmarked before making
-low-memory or production-scale claims.
+Bound delivery size in the trusted producer today. The separate API collector
+streams raw reads with a 4 MiB + 1 byte cap, then parses the bounded JSON body in
+memory and writes derived JSONL rows. It is not a streaming JSON parser.
+Peak memory and production-scale retention have not been benchmarked.
 
 ## Activation checklist
 
 - [ ] Source permissions and API tier confirmed; no secrets in Git or logs.
-- [ ] One actual authorized response/file archived unchanged with receipt metadata.
-- [ ] India or Bangladesh reporter, direction, product and period verified.
+- [x] Anonymous public preview response archived unchanged with receipt metadata.
+- [x] Narrow request scope checked against returned rows and provider code lists.
 - [ ] Complete coverage established; preview truncation and missing rows detected.
 - [ ] Units, estimation flags, definitions and statement boundaries preserved.
 - [ ] Source publication time and revision convention validated.
@@ -272,6 +342,6 @@ low-memory or production-scale claims.
 - [ ] Small-batch or streaming behavior tested with measured peak memory;
       text extracts remain traceable to unchanged original payloads.
 
-Until these checks are complete, call the integration **planned** or **experimental**,
+Until these checks are complete, call the integration **experimental**,
 not live, production-ready or historically complete. Requirement scores measure
 implemented checks; they do not certify economic truth or erase conflicting evidence.
