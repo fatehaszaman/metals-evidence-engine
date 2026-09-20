@@ -16,3 +16,4 @@ build/
 !.env.example
 .DS_Store
 outputs/
+inbox/

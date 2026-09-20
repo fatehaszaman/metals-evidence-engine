@@ -11,7 +11,8 @@ provenance, revisions, contract-level lineage, explicit evidence rules, and dete
 It evaluates evidence for a defined hypothesis; it does not declare the physical
 market "tightening" or "loosening."
 
-**Status: working synthetic-data vertical slice, not a live market-data service.**
+**Status: synthetic research slice with guarded file intake and advisory LLM review,
+not a connected live market-data service.**
 All included market values and contract identifiers are invented fixtures.
 The repository is employer-neutral and makes no investment-performance claims.
 Keep this repository private. Development remains **copper first, aluminum second**:
@@ -97,7 +98,40 @@ Reports also retain provenance, revisions, and the explicit `as_of` cutoff.
   same evaluator; the audit compares complete reports at every fixture checkpoint.
 - **Interface:** canonical JSONL ingestion, persistent SQLite storage, JSON and
   Markdown reports, generated conflict/revision/staleness case studies.
+- **Guarded intake:** continuous local-file polling, immutable delivery bytes,
+  original receipt/policy snapshots, per-row quarantine, freshness and change guards.
+- **Advisory LLM judge:** provider-neutral callback, fixed verdict schema, literal
+  evidence-quote checks, immutable review history; no automatic data correction.
 - **Verification:** adversarial tests and a Python 3.11/3.12/3.13 GitHub Actions matrix.
+
+## Messy data and the LLM judge
+
+The intake process can continuously watch a directory populated by an authorized
+provider adapter. This is a running local process, not a deployed service or a
+claim that an exchange feed is connected. Source publication frequency determines
+freshness; polling a monthly release frequently does not make its observations real-time.
+
+```bash
+mkdir -p inbox outputs
+uv run metals-evidence capture --db outputs/capture.db --inbox inbox \
+  --policy config/intake-policy.example.json --interval 30 --once
+# Remove --once to keep watching while this process runs.
+```
+
+The checked-in policy deliberately accepts **no series**. An operator must define
+source-specific units, geography, coverage/definition, freshness limits and optional
+relative-change limits before accepting any records. Producers atomically rename
+complete JSON deliveries to `*.ready`; raw bytes are preserved before parsing.
+Bad rows remain quarantined, not silently repaired or discarded.
+
+An LLM can compare a candidate extraction against raw text and propose a correction,
+abstain, or escalate. Its output must cite exact source text and pass structural
+checks; even a valid verdict remains `REQUIRES_HUMAN_REVIEW`. The judge cannot
+promote records, replace observations, invent missing values, or resolve economic
+contradictions. Observation confidence remains separate from the model's opinion.
+
+See [Guarded intake and advisory review](docs/data-intake.md) for the delivery
+contract, runnable review command, adapter interface and operational limits.
 
 ## Inspect the archive yourself
 
@@ -127,7 +161,9 @@ The metal enum permits aluminum but the implemented research case is copper only
 V1 does not discover structural breaks statistically or reconcile competing
 vendors automatically. It guards explicit definition changes and keeps sources
 separate; `SUSPECT` flags must currently be supplied by an adapter or researcher.
-Outlier detection, release calendars, and licensed data integration remain future work.
+An optional deterministic relative-change guard quarantines suspicious jumps without
+asserting they are errors. Statistical anomaly models, release calendars, and licensed
+data integration remain future work. No trained ML model or scheduled LLM service is included.
 
 A missing nearby contract in the supplied universe cannot be discovered without
 a complete contract master. Therefore “M1/M2” always means the nearest two valid
@@ -148,10 +184,12 @@ This is neither a trading strategy nor a live market-data platform.
 - [Architecture and algorithms](docs/architecture.md): time semantics, algorithms,
   complexity, lineage, and limits.
 - [Data contract](docs/data-contract.md): units, revisions, provenance, and ingestion.
+- [Guarded intake and advisory review](docs/data-intake.md): messy deliveries,
+  quarantine, LLM proposals, audit history and live-feed boundaries.
 - [Research method](docs/research-method.md): rules, ambiguous evidence, and conclusion gates.
 - [Case studies](examples/README.md): conflict, later revision, stale data, and definition breaks.
 - [Release checklist](docs/release-checklist.md): conditions before considering public release.
 
-The next scope is one documented public-data adapter with honest historical-vintage
+The next scope is one documented authorized-data adapter with honest historical-vintage
 coverage, not a dashboard or a trading strategy. Keep the repository private until
 its owner explicitly decides to publish it.
