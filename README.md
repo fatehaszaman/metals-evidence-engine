@@ -27,6 +27,18 @@ for economic reasoning or turn uncertain observations into facts.
 See [engineering evidence and preserved milestones](docs/engineering-evidence.md)
 for the implemented responsibilities and the original 86-test baseline.
 
+## Why I built this
+
+I built this project to deepen my understanding of metals supply chains in
+Bangladesh and India, using my software-engineering background to investigate
+questions rather than assume the answers. The goal is to make the research process
+inspectable: preserve the available evidence, identify gaps and contradictions,
+and distinguish what the data supports from what still needs investigation.
+
+The project is a way to develop market understanding through engineering and
+research, not a claim of comprehensive regional expertise. Its current
+implementation and validation limits are documented separately below.
+
 ## Regional scope
 
 The intended use is research on metal availability inputs relevant to cable,
