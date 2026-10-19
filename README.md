@@ -36,8 +36,12 @@ inspectable: preserve the available evidence, identify gaps and contradictions,
 and distinguish what the data supports from what still needs investigation.
 
 The project is a way to develop market understanding through engineering and
-research, not a claim of comprehensive regional expertise. Its current
-implementation and validation limits are documented separately below.
+research, not a claim of comprehensive regional expertise. Alongside the
+supply-chain evaluation logic, the append-only `as_of()` archive and structured
+`intake_review` verdicts serve as a leakage-free testbed for evaluating and
+training my own LLM-as-a-judge workflows on conflicting, incomplete, and
+revised evidence. Its current implementation and validation limits are
+documented separately below.
 
 ## Regional scope
 
