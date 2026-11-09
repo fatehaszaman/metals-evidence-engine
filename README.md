@@ -45,7 +45,7 @@ The project is a way to develop market understanding through engineering and
 research, not a claim of comprehensive regional expertise. Alongside the
 supply-chain evaluation logic, the append-only `as_of()` archive and structured
 `intake_review` verdicts serve as a leakage-free testbed for evaluating and
-training my own LLM-as-a-judge workflows on conflicting, incomplete, and
+calibrating my own LLM-as-a-judge workflows on conflicting, incomplete, and
 revised evidence. Its current implementation and validation limits are
 documented separately below.
 
