@@ -27,5 +27,6 @@ separate owner decision, and no build command changes repository visibility.
 ## Intentionally out of scope
 
 No strategy, alpha, portfolio, performance, employer-methodology, or production-feed
-claim belongs in this release. Aluminum expansion and additional feature categories
-remain deferred until the copper data path is credible end to end.
+claim belongs in this release. The aluminum case is synthetic only; real aluminum
+sources and additional feature categories remain deferred until the copper data path
+is credible end to end.

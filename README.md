@@ -18,7 +18,13 @@ The collector has made actual public API requests; no real observations have bee
 promoted into the research archive. No continuous service is deployed.
 The repository is employer-neutral and makes no investment-performance claims.
 Development remains **copper first, aluminum second**:
-the working synthetic case is copper; an aluminum case is not yet implemented.
+both cases are implemented on the same evaluator, archive and replay audit.
+
+**Case status.** Synthetic: every market value, contract identifier (`DEMO-CU-*`,
+`DEMO-AL-*`), source name and rule-effective date in the copper and aluminum cases,
+and every checked-in example report. Real: only the UN Comtrade copper preview
+collector's public API responses, which stay in quarantine and have never been
+promoted into either case. No aluminum data has been collected from any real source.
 
 Software engineering and infrastructure are the means of making the research
 auditable: explicit data contracts, bounded collection, immutable provenance,
@@ -65,7 +71,9 @@ the Python standard library; `uv.lock` pins development dependencies.
 ```bash
 uv sync --locked --extra dev
 uv run metals-evidence demo
+uv run metals-evidence demo --case aluminum
 uv run metals-evidence audit
+uv run metals-evidence audit --case aluminum
 uv run pytest --cov
 uv run ruff check .
 uv run ruff format --check .
@@ -110,6 +118,34 @@ separately from the conclusion and per-input data quality; it is an operational
 usability rubric, not a probability that the hypothesis is true.
 Reports also retain provenance, revisions, and the explicit `as_of` cutoff.
 
+### Aluminum case
+
+`--case aluminum` evaluates a separate hypothesis
+(`hypotheses/in_bd_aluminum_availability.json`) against separate synthetic
+envelopes, using the same rules engine and archive. Primary production replaces
+refined production, and the alternative explanations add secondary (recycled)
+supply, alumina constraints and substitution between aluminum and copper in
+conductors. The fixture is built to show a different path through the evaluator
+than copper:
+
+| Input | At 2025-09-19 | After the 2025-09-20 revision |
+| --- | --- | --- |
+| Nearby spread | SUPPORTS | SUPPORTS |
+| Visible inventory | SUPPORTS | WEAKENS (revised stock rises) |
+| Primary production | SUPPORTS | SUPPORTS |
+| Primary imports | INSUFFICIENT (context) | INSUFFICIENT (context) |
+| Shipments | UNAVAILABLE (not yet received) | UNAVAILABLE |
+
+Overall: **BOUNDED_SUPPORT** before the revision and **INCONCLUSIVE** after it,
+with the earlier report unchanged. Bounded support means every required comparison
+agrees with the stated mechanism; it is not a causal finding, a forecast, or a
+statement about actual aluminum markets. Generated reports are in
+[examples/aluminum](examples/aluminum/).
+
+Each archived series holds one metal and one geography. Aluminum series use an
+`aluminum_` prefix, and the archive rejects an append that would mix metals or
+coverage within one `(source, series)`.
+
 ## Implemented
 
 - **Archive:** immutable records, raw-payload SHA-256, exact duplicate handling,
@@ -122,7 +158,8 @@ Reports also retain provenance, revisions, and the explicit `as_of` cutoff.
 - **Replay:** incremental ingestion and full-archive historical queries call the
   same evaluator; the audit compares complete reports at every fixture checkpoint.
 - **Interface:** canonical JSONL ingestion, persistent SQLite storage, JSON and
-  Markdown reports, generated conflict/revision/staleness case studies.
+  Markdown reports, generated conflict/revision/staleness case studies for copper
+  and base/revision/staleness case studies for aluminum.
 - **Guarded intake:** continuous local-file polling, immutable delivery bytes,
   original receipt/policy snapshots, per-row quarantine, freshness and change guards.
 - **Advisory LLM judge:** provider-neutral callback, fixed verdict schema, literal
@@ -271,9 +308,10 @@ revision and later observations.
 
 No approved real-data adapter into the evaluator, proprietary data, verified
 complete India or Bangladesh market coverage, calibrated economic thresholds,
-shipment reconciliation, full physical balance, aluminum
-case study, continuous futures series, or deployed monitoring is claimed.
-The metal enum permits aluminum but the implemented research case is copper only.
+shipment reconciliation, full physical balance, real aluminum data,
+continuous futures series, or deployed monitoring is claimed.
+The aluminum case is synthetic, like the copper case; the Comtrade preview
+collector accepts copper product codes only.
 
 V1 does not discover structural breaks statistically or reconcile competing
 vendors automatically. It guards explicit definition changes and keeps sources

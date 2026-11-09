@@ -2,7 +2,7 @@
 
 These examples exercise the India–Bangladesh evaluator's intake requirements,
 not actual copper-market data. Copper remains the first research case and
-aluminum the second planned case.
+aluminum the second, synthetic case.
 
 ## First valid synthetic inventory observation
 

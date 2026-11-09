@@ -8,7 +8,7 @@ The ingestion format is UTF-8 JSONL containing one canonical envelope per line.
 | Field | Contract |
 | --- | --- |
 | source, series | Nonempty provider and series identifiers; never silently merge providers. |
-| metal | COPPER or ALUMINUM; copper only is exercised in the research demo. |
+| metal | COPPER or ALUMINUM; both are exercised by separate synthetic demo cases. One `(source, series)` may hold only one metal and geography. |
 | geography | Explicit coverage identifier; IN-BD denotes the synthetic India–Bangladesh research scope, not a measured regional aggregate. |
 | event_time | Realized observation/period-end time, with timezone. |
 | published_time | When that version became available from its source. |

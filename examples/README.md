@@ -7,8 +7,8 @@ historical rule-effective date is synthetic.
 The cases evaluate a copper-availability hypothesis relevant to Bangladesh–India
 cable, conductor, power, and industrial supply chains. `IN-BD` is a synthetic
 India–Bangladesh research scope, not verified national coverage or a combined
-regional balance. Copper comes first; aluminum is second and has no implemented
-case yet. This is not a trading strategy or a live market-data platform.
+regional balance. Copper comes first; aluminum is second, with its own synthetic
+case in [aluminum/](aluminum/). This is not a trading strategy or a live market-data platform.
 
 The invented USD reference quotations are neither local exchange prices nor
 converted historical observations. Their toy magnitudes test software behavior,
@@ -24,6 +24,12 @@ uv run metals-evidence demo --as-of 2025-09-20T09:00:00Z > examples/revision.md
 uv run metals-evidence demo --scenario definition-break > examples/definition-break.md
 uv run metals-evidence demo --scenario stale > examples/stale.md
 uv run metals-evidence audit > examples/replay-audit.json
+uv run metals-evidence demo --case aluminum --scenario base > examples/aluminum/base.md
+uv run metals-evidence demo --case aluminum --scenario base --format json > examples/aluminum/base.json
+uv run metals-evidence demo --case aluminum --as-of 2025-09-20T09:00:00Z > examples/aluminum/revision.md
+uv run metals-evidence demo --case aluminum --scenario definition-break > examples/aluminum/definition-break.md
+uv run metals-evidence demo --case aluminum --scenario stale > examples/aluminum/stale.md
+uv run metals-evidence audit --case aluminum > examples/aluminum/replay-audit.json
 ```
 
 ## What to inspect
@@ -39,6 +45,12 @@ uv run metals-evidence audit > examples/replay-audit.json
   INSUFFICIENT_EVIDENCE, not a recycled directional result.
 - **Replay:** full-archive reconstruction equals incremental ingestion at every
   receipt-time checkpoint, including late data and the revision.
+- **Aluminum base:** spread, visible inventory and primary production all support
+  the aluminum hypothesis at the default cutoff, so the output is BOUNDED_SUPPORT,
+  with MODERATE observation confidence because two inputs are preliminary.
+- **Aluminum revision:** a later revision raises the latest stock to 510,000 tonnes.
+  Inventory now weakens the hypothesis, so the output becomes INCONCLUSIVE; the
+  earlier report is unchanged.
 - **Requirement scores:** [Quality scorecard](quality-scorecard.md) shows why the
   same 83.33 overall score can accompany eligible or quarantined data. Mandatory
   failures override the score, and unassessed requirements remain visible.

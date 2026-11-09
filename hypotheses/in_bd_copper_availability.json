@@ -1,6 +1,6 @@
 {
   "id": "IN-BD-CU-AVAILABILITY-DEMO",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "question": "What evidence supports, weakens, contradicts, or leaves unresolved the hypothesis of reduced readily deliverable copper availability relevant to Bangladesh–India cable, conductor, power, and industrial supply chains?",
   "mechanism": "A widening earlier-minus-later contract spread and falling covered inventory are modeled expectations under the hypothesis of reduced readily deliverable copper availability relevant to India and Bangladesh. Rising covered refined output can weaken that supply-side interpretation, all else equal. Country-specific coverage and cross-border transmission require explicit validation; this synthetic research scope is not a pooled regional balance. These are contestable associations, not identified causal effects.",
   "metal": "COPPER",
@@ -14,7 +14,7 @@
     "Higher production coincided with stronger demand not measured by this fixture.",
     "Country-specific coverage, border frictions, or shipment timing differ between India and Bangladesh."
   ],
-  "boundary": "SYNTHETIC DEMONSTRATION ONLY. All market values, contract identifiers, source names, and effective dates are invented test inputs. IN-BD denotes a research scope relevant to Bangladesh–India cable, conductor, power, and industrial supply chains, not verified country coverage or a combined regional balance. Evidence is conditional on the stated mechanism and source coverage. The engine evaluates a hypothesis; it does not declare the physical market tightening or loosening. This does not establish actual India or Bangladesh copper conditions, demand, causality, price forecasts, trading recommendations, or live market-data capability. Copper first; aluminum second and not yet implemented as a case study.",
+  "boundary": "SYNTHETIC DEMONSTRATION ONLY. All market values, contract identifiers, source names, and effective dates are invented test inputs. IN-BD denotes a research scope relevant to Bangladesh–India cable, conductor, power, and industrial supply chains, not verified country coverage or a combined regional balance. Evidence is conditional on the stated mechanism and source coverage. The engine evaluates a hypothesis; it does not declare the physical market tightening or loosening. This does not establish actual India or Bangladesh copper conditions, demand, causality, price forecasts, trading recommendations, or live market-data capability. Copper first; aluminum second, implemented as a separate synthetic case study.",
   "rules": [
     {
       "name": "Nearby spread",

@@ -64,6 +64,14 @@ time, complete coverage and revision semantics remain unresolved; API rows canno
 silently enter a historical hypothesis report. The original point-in-time,
 exact-decimal, replay and contradiction tests remain part of the full test suite.
 
+## Aluminum case
+
+The aluminum case adds a second hypothesis file, invented aluminum envelopes,
+generated reports and 19 tests (260 in total on local Python 3.11 and 3.13 runs). Writing
+it exposed that the archive keyed series by source and name only, so two metals
+sharing a series name could collide. Aluminum series now carry their own names, and
+the archive rejects one series mixing metals or geographies.
+
 ## Accurate project description
 
 > I use software and infrastructure engineering to make research evidence

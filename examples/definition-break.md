@@ -22,7 +22,7 @@ Overall evidence state: **INCONCLUSIVE**. Material observations support opposing
 
 Observation confidence: LOW. Observation confidence summarizes operational usability of required observations, not hypothesis probability. Per-input data quality is reported separately.
 
-SYNTHETIC DEMONSTRATION ONLY. All market values, contract identifiers, source names, and effective dates are invented test inputs. IN-BD denotes a research scope relevant to Bangladesh–India cable, conductor, power, and industrial supply chains, not verified country coverage or a combined regional balance. Evidence is conditional on the stated mechanism and source coverage. The engine evaluates a hypothesis; it does not declare the physical market tightening or loosening. This does not establish actual India or Bangladesh copper conditions, demand, causality, price forecasts, trading recommendations, or live market-data capability. Copper first; aluminum second and not yet implemented as a case study.
+SYNTHETIC DEMONSTRATION ONLY. All market values, contract identifiers, source names, and effective dates are invented test inputs. IN-BD denotes a research scope relevant to Bangladesh–India cable, conductor, power, and industrial supply chains, not verified country coverage or a combined regional balance. Evidence is conditional on the stated mechanism and source coverage. The engine evaluates a hypothesis; it does not declare the physical market tightening or loosening. This does not establish actual India or Bangladesh copper conditions, demand, causality, price forecasts, trading recommendations, or live market-data capability. Copper first; aluminum second, implemented as a separate synthetic case study.
 
 ## Alternative explanations
 
@@ -38,8 +38,8 @@ SYNTHETIC DEMONSTRATION ONLY. All market values, contract identifiers, source na
 The JSON report includes source, series, geography, event/publication/receipt times, revision, raw-payload hash, and observation ID for each scoped input.
 The archive retains original raw payloads. Only events published and received by the as_of cutoff are eligible; later revisions cannot rewrite an earlier report.
 
-Report hash: `d822fcb870b6912fb5948f75c8c7aead4dfb9e3756c59322f77569c0070bb548`
+Report hash: `24c2041c9e5cd8cdd5aa5f630f3290b55cd12ec961865957838827858bacc3e0`
 
-Hypothesis hash: `aae8557a6a5afc439a1d476ce85f8c7afcda20ee844310dd004e0be5d4fcc08b`
+Hypothesis hash: `7c21854c21c5564637e98affe8db7eaf81321aa10d6ae43517a7e12f54441955`
 
 Parent observation IDs and exact construct lineage are in the JSON report.

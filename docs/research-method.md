@@ -5,7 +5,8 @@ The included rule file is a synthetic demonstration of conditional reasoning,
 with arbitrary test thresholds rather than empirically calibrated economics.
 The regional research scope is India and Bangladesh, with relevance to
 Bangladesh–India cable, conductor, power, and industrial supply chains.
-Copper is implemented first; aluminum follows only after the copper case is validated.
+Copper was implemented first; aluminum is the second case, built on the same evaluator
+with its own hypothesis file and synthetic fixture.
 
 ## Hypothesis specification
 

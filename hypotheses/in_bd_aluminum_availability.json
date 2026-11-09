@@ -1,0 +1,87 @@
+{
+  "id": "IN-BD-AL-AVAILABILITY-DEMO",
+  "version": "1.0.0",
+  "question": "What evidence supports, weakens, contradicts, or leaves unresolved the hypothesis of reduced readily deliverable primary aluminum availability relevant to Bangladesh–India cable, conductor, power, and industrial supply chains?",
+  "mechanism": "A widening earlier-minus-later contract spread, falling covered inventory, and falling covered primary output are modeled expectations under the hypothesis of reduced readily deliverable primary aluminum availability relevant to India and Bangladesh. Primary smelting is electricity-intensive, so power supply or power cost disruptions are one modeled route to lower output; this fixture does not observe power data. Country-specific coverage and cross-border transmission require explicit validation; this synthetic research scope is not a pooled regional balance. These are contestable associations, not identified causal effects.",
+  "metal": "ALUMINUM",
+  "geography": "IN-BD",
+  "effective_time": "2025-01-01T00:00:00Z",
+  "alternative_explanations": [
+    "Inventory moved between covered and uncovered locations rather than being consumed.",
+    "Publication lags and different observation frequencies obscure economic timing.",
+    "Contract-specific positioning or financing affected nearby spreads.",
+    "Lower primary output was offset by secondary (recycled) aluminum not covered by this fixture.",
+    "Alumina or other input constraints, rather than finished-metal demand, changed smelter output.",
+    "Conductor or cable producers substituted between aluminum and copper, shifting demand between metals.",
+    "Customs revisions or reporting-definition changes altered comparable coverage.",
+    "Country-specific coverage, border frictions, or shipment timing differ between India and Bangladesh."
+  ],
+  "boundary": "SYNTHETIC DEMONSTRATION ONLY. All market values, contract identifiers, source names, and effective dates are invented test inputs. IN-BD denotes a research scope relevant to Bangladesh–India cable, conductor, power, and industrial supply chains, not verified country coverage or a combined regional balance. Evidence is conditional on the stated mechanism and source coverage. The engine evaluates a hypothesis; it does not declare the physical market tightening or loosening. This does not establish actual India or Bangladesh aluminum conditions, smelter output, power availability, demand, causality, price forecasts, trading recommendations, or live market-data capability. Aluminum is the second case study; copper came first.",
+  "rules": [
+    {
+      "name": "Nearby spread",
+      "kind": "spread_change",
+      "source": "synthetic-in-bd-metals",
+      "series": "settlement:AL-",
+      "unit": "USD/tonne",
+      "expected": "UP",
+      "threshold": "10",
+      "max_age_days": 7,
+      "max_gap_days": 7,
+      "material": true,
+      "rationale": "Widening earlier-minus-later reference settlement spread conditionally supports the reduced-availability hypothesis; same contract pair required. Synthetic USD quotations are not local exchange prices."
+    },
+    {
+      "name": "Visible inventory",
+      "kind": "level_change",
+      "source": "synthetic-in-bd-metals",
+      "series": "aluminum_inventory",
+      "unit": "tonne",
+      "expected": "DOWN",
+      "threshold": "1000",
+      "max_age_days": 7,
+      "max_gap_days": 7,
+      "material": true,
+      "rationale": "Falling covered stocks support the hypothesis only if source definition and coverage are comparable."
+    },
+    {
+      "name": "Primary production",
+      "kind": "level_change",
+      "source": "synthetic-in-bd-metals",
+      "series": "aluminum_primary_production",
+      "unit": "tonne",
+      "expected": "DOWN",
+      "threshold": "2000",
+      "max_age_days": 60,
+      "max_gap_days": 35,
+      "material": true,
+      "rationale": "Lower covered primary output supports this narrow supply-side mechanism, conditional on unchanged secondary supply and unobserved demand. Coverage is synthetic, not a sum of India and Bangladesh smelter output."
+    },
+    {
+      "name": "Primary imports",
+      "kind": "context",
+      "source": "synthetic-in-bd-metals",
+      "series": "aluminum_primary_imports",
+      "unit": "tonne",
+      "expected": "NONE",
+      "threshold": "0",
+      "max_age_days": 60,
+      "max_gap_days": 35,
+      "material": false,
+      "rationale": "Import changes may reflect demand, relative prices, timing, or substitution; direction alone cannot classify physical availability. No bilateral India–Bangladesh trade coverage is claimed."
+    },
+    {
+      "name": "Shipments",
+      "kind": "context",
+      "source": "synthetic-in-bd-metals",
+      "series": "aluminum_shipments",
+      "unit": "tonne",
+      "expected": "NONE",
+      "threshold": "0",
+      "max_age_days": 30,
+      "max_gap_days": 35,
+      "material": false,
+      "rationale": "Optional contextual input; explicitly unavailable before local receipt, even if published earlier."
+    }
+  ]
+}

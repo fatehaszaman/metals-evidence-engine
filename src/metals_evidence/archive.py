@@ -53,6 +53,22 @@ class Archive:
                 "SELECT 1 FROM observations WHERE id = ?", (observation.id,)
             ).fetchone():
                 return False
+            # The archive keys a series by (source, series); one series must not mix metals or
+            # coverage, or point-in-time ranking would compare unlike observations.
+            if self.connection.execute(
+                """
+                SELECT 1 FROM observations
+                WHERE source = ? AND series = ?
+                  AND (json_extract(envelope, '$.metal') != ?
+                       OR json_extract(envelope, '$.geography') != ?)
+                LIMIT 1
+                """,
+                (observation.source, observation.series, observation.metal, observation.geography),
+            ).fetchone():
+                raise ValueError(
+                    "series already holds a different metal or geography; "
+                    "use a distinct series identifier"
+                )
             try:
                 self.connection.execute(
                     "INSERT INTO observations VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",

@@ -10,7 +10,7 @@ from pathlib import Path
 from metals_evidence.archive import Archive
 from metals_evidence.capture import Intake, load_policy, watch
 from metals_evidence.comtrade import CollectionStore, PreviewQuery, collect
-from metals_evidence.demo import DEFAULT_CUTOFF, parity_audit, records, scenario
+from metals_evidence.demo import CASES, DEFAULT_CUTOFF, parity_audit, records, scenario
 from metals_evidence.evidence import Hypothesis, evaluate, json_report, markdown
 from metals_evidence.judge import review_files
 from metals_evidence.model import Observation, canonical
@@ -22,14 +22,18 @@ def parser() -> argparse.ArgumentParser:
     commands = root.add_subparsers(dest="command", required=True)
     for name in ("demo", "evaluate", "audit"):
         sub = commands.add_parser(name)
-        sub.add_argument("--hypothesis", default="hypotheses/in_bd_copper_availability.json")
+        sub.add_argument(
+            "--hypothesis", help="Hypothesis file; defaults to the selected --case hypothesis"
+        )
+        if name != "evaluate":
+            sub.add_argument("--case", choices=tuple(CASES), default="copper")
         if name != "audit":
             sub.add_argument("--as-of", default=DEFAULT_CUTOFF if name == "demo" else None)
             sub.add_argument("--format", choices=("json", "markdown"), default="markdown")
         if name == "demo":
             sub.add_argument(
                 "--scenario",
-                choices=("conflict", "stale", "definition-break"),
+                choices=("base", "conflict", "stale", "definition-break"),
                 default="conflict",
             )
         if name == "evaluate":
@@ -37,7 +41,8 @@ def parser() -> argparse.ArgumentParser:
     ingest = commands.add_parser("ingest")
     ingest.add_argument("--db", required=True)
     ingest.add_argument("--input", required=True, help="Canonical observation envelopes in JSONL")
-    commands.add_parser("fixtures")
+    fixtures = commands.add_parser("fixtures")
+    fixtures.add_argument("--case", choices=tuple(CASES), default="copper")
     capture = commands.add_parser("capture", help="Watch provider-delivered files; no network feed")
     capture.add_argument("--db", required=True)
     capture.add_argument("--inbox", required=True)
@@ -107,7 +112,7 @@ def main(argv: list[str] | None = None) -> int:
                 )
             return 0
         if args.command == "fixtures":
-            for record in records():
+            for record in records(CASES[args.case][0]):
                 print(canonical(record.to_dict()))
             return 0
         if args.command == "ingest":
@@ -121,13 +126,16 @@ def main(argv: list[str] | None = None) -> int:
                 added = sum(archive.append(record) for record in records_to_load)
                 print(canonical({"added": added, "stored": archive.count()}))
             return 0
-        hypothesis = Hypothesis.load(args.hypothesis)
+        case = getattr(args, "case", "copper")
+        hypothesis = Hypothesis.load(args.hypothesis or CASES[case][1])
         if args.command == "audit":
             audit = parity_audit(hypothesis)
             print(json.dumps(audit, indent=2))
             return 0 if audit["passed"] else 1
         if args.command == "demo":
-            data, scenario_cutoff = scenario(args.scenario)
+            if hypothesis.metal != CASES[case][0]:
+                raise ValueError("hypothesis metal does not match the selected --case fixture")
+            data, scenario_cutoff = scenario(args.scenario, CASES[case][0])
             cutoff = scenario_cutoff if args.as_of == DEFAULT_CUTOFF else args.as_of
             with Archive() as archive:
                 for record in data:
